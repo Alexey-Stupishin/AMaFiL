@@ -117,13 +117,9 @@ void _proceedGlobals(bool bGet)
     // {
     //     WiegelmannMatryoshkaInterpolator = (CagmVectorFieldOps::Interpolator)iWiegelmannMatryoshkaInterpolator;
     // }
-
     
-
     mapIntproceed   (bGet, "bounds_correction", WiegelmannBoundsCorrection, 0);
     mapIntproceed   (bGet, "threads_priority", WiegelmannThreadPriority, low);
-
-    mapIntproceed   (bGet, "protocol_step", WiegelmannProtocolStep, 10);
 
     mapIntproceed   (bGet, "weight_type", WiegelmannWeightType, SWF_COS);
     mapDoubleproceed(bGet, "weight_bound_size", WiegelmannWeightBound, 0.1);
@@ -134,7 +130,7 @@ void _proceedGlobals(bool bGet)
 
     mapDoubleproceed(bGet, "step_initial", WiegelmannProcStep0, 0.1); // units of Bav/F2max
     
-    mapIntproceed   (bGet, "step_max", WiegelmannProcStepMax, 10000000000); // max. aval. step
+    mapIntproceed   (bGet, "step_max", WiegelmannProcStepMax, 1000000000); // max. aval. step
     mapIntproceed   (bGet, "max_iterations", WiegelmannProcMaxSteps, 100000); // max. number of step
 
     mapDoubleproceed(bGet, "step_increment_init", WiegelmannProcStepIncrInit, 1.618);
@@ -167,7 +163,10 @@ void _proceedGlobals(bool bGet)
     mapIntproceed   (bGet, "add_conditions_xyz", WiegelmannProcCondBase,  2);
     mapIntproceed   (bGet, "add_conditions_xyz_max", WiegelmannProcCondBase2, 1);
 
+    mapIntproceed   (bGet, "protocol_step", WiegelmannProtocolStep, 10);
+
     mapIntproceed   (bGet, "metrics_theta", WiegelmannGetMetricsTheta, 0);
+    mapIntproceed   (bGet, "debug_input", debug_input, 0);
 }
 
 //------------------------------------------------------------------

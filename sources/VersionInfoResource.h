@@ -4,12 +4,12 @@
 #define VIR_QUOTE_SUBST(a) VIR_QUOTE(a)
 
 //-------------------------------------------------------------------------
-#define VIR_Ver1 3
-#define VIR_Ver2 4
-#define VIR_Ver3 23
-#define VIR_Ver4 1203
-#define VIR_Revision 797
-#define VIR_Year 2023
+#define VIR_Ver1 4
+#define VIR_Ver2 0
+#define VIR_Ver3 24
+#define VIR_Ver4 520
+#define VIR_Revision 824
+#define VIR_Year 2024
 
 //-------------------------------------------------------------------------
 #define VIR_CompanyName "St. Petersburg State University, Russia"

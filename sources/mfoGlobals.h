@@ -24,8 +24,6 @@ d_mfoglobaldefineextern int gstcLibraryInit
 #endif
     ;
 
-d_mfoglobaldefineextern enum StencilScheme {s3 = 3, s5 = 5, s31 = 31, s41 = 41, s42 = 42};
-
 d_mfoglobaldefineextern std::map<std::string, int> mapInt;
 d_mfoglobaldefineextern std::map<std::string, uint64_t> mapuint64_t;
 d_mfoglobaldefineextern std::map<std::string, double> mapDouble;
@@ -34,13 +32,6 @@ d_mfoglobaldefineextern int WiegelmannWeightType;
 d_mfoglobaldefineextern double WiegelmannWeightBound;
 d_mfoglobaldefineextern double WiegelmannWeightDivfree;
 d_mfoglobaldefineextern int WiegelmannBoundsCorrection;
-
-//d_mfoglobaldefineextern int WiegelmannProcTimeoutMS;
-
-//d_mfoglobaldefineextern int WiegelmannSynchronous;
-//d_mfoglobaldefineextern int WiegelmannShowProgress;
-//d_mfoglobaldefineextern double WiegelmannShowProgressTimeQuant;
-d_mfoglobaldefineextern int WiegelmannProtocolStep;
 
 d_mfoglobaldefineextern double WiegelmannInversionTolerance;
 
@@ -118,5 +109,8 @@ d_mfoglobaldefineextern int WiegelmannProcCondBase2;
 //d_mfoglobaldefineextern int WiegelmannChunkSizeOpt;
 d_mfoglobaldefineextern int CommonThreadsN;
 d_mfoglobaldefineextern int WiegelmannThreadPriority;
+
+d_mfoglobaldefineextern int WiegelmannProtocolStep;
+d_mfoglobaldefineextern int debug_input;
 
 #undef d_mfoglobaldefineextern

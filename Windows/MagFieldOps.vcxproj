@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\Common\Utils\binUtilities.cpp" />
     <ClCompile Include="..\..\Common\Utils\console_debug.cpp" />
     <ClCompile Include="..\..\Common\Utils\string_ex.cpp" />
+    <ClCompile Include="..\sources\InputParsControl.cpp" />
     <ClCompile Include="..\sources\LinesProcessor.cpp" />
     <ClCompile Include="..\sources\MagFieldOps.cpp" />
     <ClCompile Include="..\sources\mfoGetLine.cpp" />
@@ -91,7 +92,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>NDEBUG_DATA_TRACE;NDEBUG_CPP11THREAD;NUSE_UNIT_TEST;_MSVC_BUILD_NO;WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils;..\..\common\WinUtils</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG_CPP11THREAD;_MSVC_BUILD;WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils;..\..\common\WinUtils</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>

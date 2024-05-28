@@ -8,6 +8,8 @@
 #include "console_debug.h"
 #include "debug_data_trace_win.h"
 
+void DebugWritePars(FILE * fid, CagmVectorField * field, CagmScalarField * w);
+
 static aguTimeTicToc tic;
 
 static double get_max_L_incr(int *N)
@@ -242,6 +244,15 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
     CagmScalarField *bottomWeight,
     double *vcos, PROTO_mfoWiegelmannCallback callback)
 {
+#ifdef _WINDOWS
+    if (debug_input)
+    {
+        FILE *fid = fopen("c:\\temp\\debug_input.bin", "wb");
+        DebugWritePars(fid, field, weight);
+        fclose(fid);
+    }
+#endif _WINDOWS
+
     console_start();
 
     if (!baseField || !baseWeight)
