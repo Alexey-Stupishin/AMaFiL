@@ -2,15 +2,14 @@
 #include "mfoGlobals.h"
 
 #include "MagFieldOps.h"
-#include "NLFFFLinesTaskQueue.h"
+//#include "NLFFFLinesTaskQueue.h"
 #include "LinesTaskProcessor11.h"
 #include "LinesProcessor.h"
 #include "agmRKF45.h"
 
 #include "console_debug.h"
 
-__declspec(dllexport) uint32_t mfoGetLinesV(int *N,
-    CagmVectorField *v,
+__declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     uint32_t _cond, double chromoLevel,
     double *_seeds, int _Nseeds,
     int nProc,
@@ -24,20 +23,15 @@ __declspec(dllexport) uint32_t mfoGetLinesV(int *N,
     nProc = TaskQueueProcessor::getProcInfo(nProc);
     TaskQueueProcessor proc(nProc);
 
-    uint32_t rc = 0;
-
     int maxResult = 50000;
 
     LQPTaskFactory factory;
-    LQPSupervisor *supervisor = new LQPSupervisor(N, v, _cond, chromoLevel,
+    LQPSupervisor *supervisor = new LQPSupervisor(v, _cond, chromoLevel,
         _seeds, _Nseeds,
-        nProc,
-        step, tolerance, boundAchieve,
-        _nLines, _nPassed,
         _voxelStatus, _physLength, _avField,
         _linesLength, _codes,
         _startIdx, _endIdx, _apexIdx,
-        _maxCoordLength, _totalLength, _coords, _linesStart, _linesIndex, seedIdx, &factory, proc.get_sync());
+        _maxCoordLength, _coords, _linesStart, _linesIndex, seedIdx, &factory, proc.get_sync());
 
     std::vector<ATQPProcessor *> processors;
     for (int i = 0; i < nProc; i++)
@@ -87,8 +81,7 @@ __declspec(dllexport) uint32_t mfoGetLines(int *N,
 
     CagmVectorField *v = new CagmVectorField(Bx, By, Bz, N);
 
-    uint32_t rc = mfoGetLinesV(N,
-        v,
+    uint32_t rc = mfoGetLinesV(v,
         conditions, chromo_level,
         seeds, Nseeds,
         nProc,

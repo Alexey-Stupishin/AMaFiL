@@ -2,6 +2,12 @@
 //
 
 #include "stdDefinitions.h"
+
+#ifdef _WINDOWS
+#include <windows.h>
+#pragma warning (disable : 4996)
+#endif
+
 #include <ctime>
 #include "string.h"
 
@@ -12,10 +18,6 @@
 
 #include "agmScalarField.h"
 #include "agmVectorField.h"
-
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
 
 //------------------------------------------------------------------
 int getPriority(w_priority p)

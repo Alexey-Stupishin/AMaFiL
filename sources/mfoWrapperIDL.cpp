@@ -5,7 +5,7 @@
 
 #include "idl_export_ext.h"
 
-int mfoNLFFFVersion(int argc, void* argv[])
+int mfoNLFFFVersion(int /* argc */, void* argv[])
 {
     IDL_STRING *idlstr = (IDL_STRING *)argv[0];
     char *buffer = new char[512];
@@ -23,7 +23,8 @@ int mfoNLFFF(int argc, void* argv[])
     utilInitialize();
 
     CidlPassParameterMap *m = (CidlPassParameterMap *)argv[0];
-    int nErrors = m->parse(&mapInt, &mapuint64_t, &mapDouble);
+    /* int nErrors = */
+    m->parse(&mapInt, &mapuint64_t, &mapDouble);
     _proceedGlobals();
 
     int *N = (int *)argv[1];
@@ -211,11 +212,11 @@ int mfoNLFFF(int argc, void* argv[])
     return 0;
 }
 
-int mfoLines(int argc, void* argv[])
+int mfoLines(int /* argc */, void* argv[])
 {
-    std::map<std::string, int> mapInt;
-    std::map<std::string, uint64_t> mapuint64_t;
-    std::map<std::string, double> mapDouble;
+    std::map<std::string, int> _mapInt;
+    std::map<std::string, uint64_t> _mapuint64_t;
+    std::map<std::string, double> _mapDouble;
 
     uint32_t conditions = 0x3;
     int n_processes = 0;
@@ -226,44 +227,34 @@ int mfoLines(int argc, void* argv[])
     double toleranceCoord = 1e-3;      // 2do!
     double toleranceClosed = 1e-2;     // 2do!
 
-    mapInt.insert({"reduce_passed", conditions});
-    mapInt.insert({"n_processes", n_processes});
+    _mapInt.insert({"reduce_passed", conditions});
+    _mapInt.insert({"n_processes", n_processes});
 
-    mapDouble.insert({ "chromo_level", chromo_level });
-    mapDouble.insert({ "step", step });
-    mapDouble.insert({ "tolerance", tolerance });
-    mapDouble.insert({ "toleranceBound", toleranceBound });
-    mapDouble.insert({ "toleranceCoord", toleranceCoord });
-    mapDouble.insert({ "toleranceClosed", toleranceClosed });
+    _mapDouble.insert({ "chromo_level", chromo_level });
+    _mapDouble.insert({ "step", step });
+    _mapDouble.insert({ "tolerance", tolerance });
+    _mapDouble.insert({ "toleranceBound", toleranceBound });
+    _mapDouble.insert({ "toleranceCoord", toleranceCoord });
+    _mapDouble.insert({ "toleranceClosed", toleranceClosed });
 
     int c = 0;
     //#pragma pack(push, 1)
     CidlPassParameterMap *m = (CidlPassParameterMap *)argv[c++];
     //#pragma pack(pop, 1)
-    int nErrors = m->parse(&mapInt, &mapuint64_t, &mapDouble);
+    int nErrors = m->parse(&_mapInt, &_mapuint64_t, &_mapDouble);
     if (nErrors != 0)
         return LIB_STATE_NO_PARAMETER;
 
-    int cond = mapInt["reduce_passed"];
+    int cond = _mapInt["reduce_passed"];
     conditions = cond;
-    n_processes = mapInt["n_processes"];
+    n_processes = _mapInt["n_processes"];
 
-    chromo_level = mapDouble["chromo_level"];
-    step = mapDouble["step"];
-    tolerance = mapDouble["tolerance"];
-    toleranceBound = mapDouble["toleranceBound"];
-    toleranceCoord = mapDouble["toleranceCoord"];
-    toleranceClosed = mapDouble["toleranceClosed"];
-
-    ////---------------------
-    //utilInitialize();
-
-    //CidlPassParameterMap *m = (CidlPassParameterMap *)argv[0];
-    //int nErrors = m->parse(&mapInt, &mapuint64_t, &mapDouble);
-    //_proceedGlobals();
-    ////---------------------
-
-    uint64_t *largv = (uint64_t *)argv;
+    chromo_level = _mapDouble["chromo_level"];
+    step = _mapDouble["step"];
+    tolerance = _mapDouble["tolerance"];
+    toleranceBound = _mapDouble["toleranceBound"];
+    toleranceCoord = _mapDouble["toleranceCoord"];
+    toleranceClosed = _mapDouble["toleranceClosed"];
 
     int *N = (int *)argv[c++];
     double *Bx = (double *)argv[c++];

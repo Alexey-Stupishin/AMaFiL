@@ -6,6 +6,8 @@
 #include "agmScalarField.h"
 #include "agmVectorFieldOps.h"
 
+#define DEBUG_OUT_PATH "g:\\temp\\"
+
 #ifndef d_mfoglobaldefine
 #define d_mfoglobaldefineextern extern
 #else

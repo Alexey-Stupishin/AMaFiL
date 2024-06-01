@@ -66,7 +66,7 @@ uint32_t fdata(void *p, const double /*t*/, const CagmRKF45Vect& v, CagmRKF45Vec
 }
 
 //-----------------------------------------------------------------------------
-CLinesProcessor::CLinesProcessor(LQPSupervisor *_supervisor, int _taskID, CagmVectorField *_v, int _dir, double _step, double _relErr, double _absErr
+CLinesProcessor::CLinesProcessor(LQPSupervisor *_supervisor, CagmVectorField *_v, int _dir, double _step, double _relErr, double _absErr
         , double _boundAchieve, double _boundAchieveBottom, int _maxLength, int *_passed)
     : supervisor(_supervisor)
       ,v(_v)
@@ -105,8 +105,10 @@ uint32_t CLinesProcessor::ActionCore()
     if ( !supervisor->needProcessing(queueID) )
             return 0;
 
-    CagmVectorFieldOps::Status s = v->getOneFullLine(rkf45, point, dir, step, boundAchieve, boundAchieveBottom, maxLength, &lineLength, coord, &code);
-    uint32_t rc = supervisor->SetResult(queueID, point, coord, lineLength, (int)code, CagmVectorFieldOps::Status::BufferOverload);
+    /* CagmVectorFieldOps::Status s = */
+    v->getOneFullLine(rkf45, point, dir, step, boundAchieve, boundAchieveBottom, maxLength, &lineLength, coord, &code);
+    /* uint32_t rc = */
+    supervisor->SetResult(queueID, point, coord, lineLength, (int)code, CagmVectorFieldOps::Status::BufferOverload);
 
     return 0;
 }

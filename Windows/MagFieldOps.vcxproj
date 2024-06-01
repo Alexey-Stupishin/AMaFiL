@@ -29,7 +29,7 @@
     <ClCompile Include="..\..\Common\Utils\binUtilities.cpp" />
     <ClCompile Include="..\..\Common\Utils\console_debug.cpp" />
     <ClCompile Include="..\..\Common\Utils\string_ex.cpp" />
-    <ClCompile Include="..\sources\InputParsControl.cpp" />
+    <ClCompile Include="..\sources\DebugWrite.cpp" />
     <ClCompile Include="..\sources\LinesProcessor.cpp" />
     <ClCompile Include="..\sources\MagFieldOps.cpp" />
     <ClCompile Include="..\sources\mfoGetLine.cpp" />
@@ -40,9 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MagFieldOps.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Common\BaseMath\DiffCoefs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0751568-61B4-4FCD-B57F-7A86EF447797}</ProjectGuid>
@@ -91,7 +88,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NDEBUG_DATA_TRACE;NDEBUG_CPP11THREAD;NUSE_UNIT_TEST;_MSVC_BUILD_NO;WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG_DATA_TRACE;NDEBUG_CPP11THREAD;NUSE_UNIT_TEST;WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils;..\..\common\WinUtils</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -119,7 +116,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG_CPP11THREAD;_MSVC_BUILD;WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG_CPP11THREAD;WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;..\sources;..\..\common\BaseMath;..\..\common\BasePhysics;..\..\common\General;..\..\common\IDL;..\..\common\Multithread;..\..\common\Utils;..\..\common\WinUtils</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

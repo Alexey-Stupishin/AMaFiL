@@ -27,7 +27,7 @@ protected:
     LQPSupervisor *supervisor;
 
 public:
-    CLinesProcessor(LQPSupervisor *, int, CagmVectorField *, int, double, double, double, double, double, int, int *);
+    CLinesProcessor(LQPSupervisor *, CagmVectorField *, int, double, double, double, double, double, int, int *);
     virtual ~CLinesProcessor();
 
     virtual uint32_t setTaskParams(void * params);

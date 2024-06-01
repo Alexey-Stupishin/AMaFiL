@@ -52,14 +52,13 @@ public:
     int nNonStored;
 
 public:
-    CLinesTaskQueue(int _nTasks, CagmVectorFieldOps *_field,
+    CLinesTaskQueue(CagmVectorFieldOps *_field,
         uint32_t _cond = 0x3, double _chromoLevel = 0,
         double *_physLength = nullptr, double *_avField = nullptr,
         int *_voxelStatus = nullptr, int *_codes = nullptr,
         int *_startIdx = nullptr, int *_endIdx = nullptr, int *_apexIdx = nullptr,
         int maxResult = 50000,
-        uint64_t _maxCoordLength = 0, int *_linesLength = nullptr, double *_coords = nullptr, uint64_t *_linesStart = nullptr, int *_linesIndex = nullptr, int *_seedIdx = nullptr,
-        bool _bFixAffinity = false)
+        uint64_t _maxCoordLength = 0, int *_linesLength = nullptr, double *_coords = nullptr, uint64_t *_linesStart = nullptr, int *_linesIndex = nullptr, int *_seedIdx = nullptr)
         : 
         n(0)
         , field(_field)
@@ -99,7 +98,7 @@ public:
         return nQueue = _nQueue;
     }
 
-    virtual long NextQueueItem(int taskN = -1)
+    virtual long NextQueueItem()
     {
         if (n >= nQueue)
             return -1; //  ABaseTaskQueue::NoItems;
@@ -163,7 +162,7 @@ public:
         {
             int state = FS_VOID;
             // find fragment
-            int start, end;
+            int start = 0, end = 0;
             bool found = false;
             int kPoint = -1;
             for (int k = 0; k < resLength; k++)

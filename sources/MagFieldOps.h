@@ -73,8 +73,7 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *, CagmS
 
 __declspec( dllexport ) int utilGetVersion(char *, int);
 
-__declspec(dllexport) uint32_t mfoGetLinesV(int *N,
-    CagmVectorField *v,
+__declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     uint32_t _cond = 0x3, double chromoLevel = 0,
     double  *_seeds = nullptr, int _Nseeds = 0,
     int nProc = 0,

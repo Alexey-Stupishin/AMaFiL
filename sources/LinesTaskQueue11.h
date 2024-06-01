@@ -17,7 +17,7 @@ public:
     LQPTask(int _id) : ATQPTask(_id) {}
     void setData(double *_data) { memcpy(data, _data, 3 * sizeof(double)); }
     double *getData() { return data; }
-    void setID(unsigned long id) { queueID = id; }
+    void setID(unsigned long _id) { queueID = _id; }
     unsigned long getID() { return queueID; }
 };
 
@@ -44,24 +44,19 @@ protected:
     std::mutex mutex_store;
     
 public:
-    LQPSupervisor(int *N,
-        CagmVectorField *v,
+    LQPSupervisor(CagmVectorField *v,
         uint32_t _cond, double chromoLevel,
         double *_seeds, int _Nseeds,
-        int nProc,
-        double step, double tolerance, double boundAchieve,
-        int *_nLines, int *_nPassed,
         int *_voxelStatus, double *_physLength, double *_avField,
         int *_linesLength, int *_codes,
         int *_startIdx, int *_endIdx, int *_apexIdx,
-        uint64_t _maxCoordLength, uint64_t *_totalLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx,
+        uint64_t _maxCoordLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx,
         LQPTaskFactory *factory, ATQPSynchonizer *_sync)
         : ATQPSupervisor(0, factory, _sync)
     {
         int maxResult = 50000;
 
-        queue = new CNLFFFLinesTaskQueue(nProc,
-            v, _seeds, _Nseeds, _cond, chromoLevel,
+        queue = new CNLFFFLinesTaskQueue(v, _seeds, _Nseeds, _cond, chromoLevel,
             _physLength, _avField,
             _voxelStatus, _codes,
             _startIdx, _endIdx, _apexIdx,
