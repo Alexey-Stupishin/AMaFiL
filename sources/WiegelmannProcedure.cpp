@@ -51,12 +51,12 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     CagmScalarField *bottomWeight,
     double *vcos, int depth, PROTO_mfoWiegelmannCallback callback, double *maxStep)
 {
-    int *N = field->GetDimensions();
+    int N[3];
+    field->dimensions(N);
 
     double *memoryAv = new double[WiegelmannProcdLStdWin];
 
-    CagmVectorField *vF = new CagmVectorField(N);
-    vF->SetSteps(field->GetSteps());
+    CagmVectorField *vF = new CagmVectorField(field);
 
     int NB[3];
     memcpy(NB, N, 3*sizeof(int));
@@ -104,12 +104,10 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     DebugWriteData(vF, "debug_vF", depth);
 
     double L, Lprev = L0;
-    proceedDL(0.0, 0.0, 0, NULL, memoryAv);
+    proceedDL(0.0, 0.0, 0, nullptr, memoryAv);
 
-    CagmVectorField *prevField = new CagmVectorField(*field);
-    prevField->SetSteps(field->GetSteps());
-    CagmVectorField *prevVF = new CagmVectorField(*vF);
-    prevVF->SetSteps(field->GetSteps());
+    CagmVectorField *prevField = new CagmVectorField(field, true);
+    CagmVectorField *prevVF = new CagmVectorField(vF, true);
 
     double step = step0, dL;
     *maxStep = step0;
@@ -119,8 +117,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     double Lptest = L0;
     while (true)
     {
-        field->Copy(*prevField);
-        vF->Copy(*prevVF);
+        field->Copy(prevField);
+        vF->Copy(prevVF);
         ///////////////////////
         vF->mult(step);
         field->add(vF);
@@ -137,8 +135,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     }
     step0 = step * WiegelmannProcStep0;
     step = step0;
-    field->Copy(*prevField);
-    vF->Copy(*prevVF);
+    field->Copy(prevField);
+    vF->Copy(prevVF);
 
     int z_size = N[2];
     int voxels = N[0]*N[1]*N[2];
@@ -161,8 +159,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
         dL = Lprev - L;
         if (dL/Lprev <= - proc->max_dL_incr)
         {
-            field->Copy(*prevField);
-            vF->Copy(*prevVF);
+            field->Copy(prevField);
+            vF->Copy(prevVF);
             if (step < step0*WiegelmannProcStepLim)
                 reason = 1;
             else
@@ -175,8 +173,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
             proc->setBase(L/L0, step, stepN, depth, iterN, tic.toc(), z_size, voxels);
 
             Lprev = L;
-            prevField->Copy(*field);
-            prevVF->Copy(*vF);
+            prevField->Copy(field);
+            prevVF->Copy(vF);
 
             step *= WiegelmannProcStepIncr;
             if (step > step0*WiegelmannProcStepMax)
@@ -187,7 +185,7 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
             if (stepN > WiegelmannProcMaxSteps)
                 reason = 3;
             else
-                reason = proceedDL(dL / L0, L / L0, stepN, NULL, memoryAv);
+                reason = proceedDL(dL / L0, L / L0, stepN, nullptr, memoryAv);
 
             if (callback && stepN%WiegelmannProtocolStep == 0)
                 callback(step / step0, 0, 0, 0, depth, dL / L0 / step, proc, field, &stop);
@@ -197,8 +195,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
 
         if (reason != 0)
         {
-            field->Copy(*prevField);
-            vF->Copy(*prevVF);
+            field->Copy(prevField);
+            vF->Copy(prevVF);
             break;
         }
 
@@ -273,7 +271,7 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
     int depth = 1;
     if (bMatr)
     {
-        depth = field->GetMatryoshkeDepth(WiegelmannMatryoshkaDeepMinN, WiegelmannMatryoshkaFactor);
+        depth = field->getMatryoshkaDepth(WiegelmannMatryoshkaDeepMinN, WiegelmannMatryoshkaFactor);
         if (depth < 2)
             bMatr = false;
     }
@@ -294,12 +292,10 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
     }
     else
     {
-        double factor = WiegelmannMatryoshkaFactor; //pow(d, 1.0/(depth-1));
+        double factor = WiegelmannMatryoshkaFactor;
         int *Ns = new int[3*depth];
         double *steps = new double[3*depth];
-        Ns[0] = field->N[0];
-        Ns[1] = field->N[1];
-        Ns[2] = field->N[2];
+        field->dimensions(Ns);
         steps[0] = 1.0;
         steps[1] = 1.0;
         steps[2] = 1.0;
@@ -324,29 +320,18 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
         WiegelmannProcdLStdVal = WiegelmannProcdLStdValInit;
         WiegelmannProcdLStdWin = WiegelmannProcdLStdWinInit;
 
-        int xBounds[2], yBounds[2], zBounds[2];
         int *pN0 = Ns+3*(depth-1);
-        CagmVectorField *v0 = new CagmVectorField(pN0);
+        CagmVectorField *v0 = new CagmVectorField(pN0, steps+3*(depth-1));
 
         DebugWriteData(field, "field_init", depth);
         v0->stretch(field);
         DebugWriteData(v0, "field_stretch", depth);
-        v0->SetSteps(steps+3*(depth-1));
 
-        CagmScalarField *sW0 = new CagmScalarField(pN0);
         DebugWriteData(weight, "weight_init", depth);
+        CagmScalarField *sW0 = new CagmScalarField(pN0, steps+3*(depth-1));
         sW0->stretch(weight);
         DebugWriteData(sW0, "weight_stretch", depth);
 
-        int limlow[3], limhigh[3];
-        limlow[0] = xBounds[0];
-        limlow[1] = yBounds[0];
-        limlow[2] = zBounds[0];
-        limhigh[0] = xBounds[1];
-        limhigh[1] = yBounds[1];
-        limhigh[2] = zBounds[1];
-        sW0->setNPhys(limlow, limhigh);
-        sW0->SetSteps(steps+3*(depth-1));
         mfoWiegelmannProcedureCore(v0, sW0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, vcos, depth, callback, &maxStep);
         delete sW0;
         CagmVectorField *v1;
@@ -358,34 +343,33 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
             WiegelmannProcdLStdVal = WiegelmannProcdLStdValMatr;
             WiegelmannProcdLStdWin = WiegelmannProcdLStdWinMatr;
             pN0 = Ns+3*i;
-            v1 = new CagmVectorField(pN0);
+            v1 = new CagmVectorField(pN0, steps+3*i);
             v1->stretch(v0);
-            v1->SetSteps(steps+3*i);
+            DebugWriteData(v1, "field_stretch", i+1);
 
             delete v0;
-            sW0 = new CagmScalarField(pN0);
+            sW0 = new CagmScalarField(pN0, steps+3*i);
             sW0->stretch(weight);
-            sW0->SetSteps(steps+3*i);
+            DebugWriteData(sW0, "weight_stretch", i+1);
             mfoWiegelmannProcedureCore(v1, sW0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, vcos, i+1, callback, &maxStep);
             delete sW0;
             v0 = v1;
         }
 
         int NB[3];
-        memcpy(NB, field->N, 3*sizeof(int));
+        field->dimensions(NB);
         NB[0] = 2;
         CagmVectorField boundsx(NB);
-        memcpy(NB, field->N, 3*sizeof(int));
+        field->dimensions(NB);
         NB[1] = 2;
         CagmVectorField boundsy(NB);
-        memcpy(NB, field->N, 3*sizeof(int));
+        field->dimensions(NB);
         NB[2] = 2;
         CagmVectorField boundsz(NB);
         field->getBounds(&boundsx, &boundsy, &boundsz);
-
         field->stretch(v0);
-
         field->setBounds(&boundsx, &boundsy, &boundsz);
+        DebugWriteData(field, "field_stretch", 1);
 
         delete v0;
 

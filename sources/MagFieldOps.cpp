@@ -129,7 +129,8 @@ void _proceedGlobals(bool bGet)
 
     mapIntproceed   (bGet, "derivative_stencil", WiegelmannDerivStencil, 3);
     mapDoubleproceed(bGet, "inversion_tolerance", WiegelmannInversionTolerance, 0);
-
+    mapDoubleproceed(bGet, "inversion_denominator", WiegelmannInversionDenom, 0);
+    
     mapDoubleproceed(bGet, "step_initial", WiegelmannProcStep0, 0.1); // units of Bav/F2max
     
     mapIntproceed   (bGet, "step_max", WiegelmannProcStepMax, 1000000000); // max. aval. step

@@ -79,7 +79,7 @@ __declspec(dllexport) uint32_t mfoGetLines(int *N,
 {
     console_start();
 
-    CagmVectorField *v = new CagmVectorField(Bx, By, Bz, N);
+    CagmVectorField *v = new CagmVectorField(N, Bx, By, Bz, true);
 
     uint32_t rc = mfoGetLinesV(v,
         conditions, chromo_level,

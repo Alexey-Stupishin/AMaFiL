@@ -63,7 +63,8 @@ void DebugWritePars(char *fname, CagmVectorField * field, CagmScalarField * w)
 
         CbinDataStruct::Write(fid, &WiegelmannDerivStencil, 1, "WiegelmannDerivStencil");
         CbinDataStruct::Write(fid, &WiegelmannInversionTolerance, 1, "WiegelmannInversionTolerance");
-
+        CbinDataStruct::Write(fid, &WiegelmannInversionDenom, 1, "WiegelmannInversionDenom");
+        
         CbinDataStruct::Write(fid, &WiegelmannProcStep0, 1, "WiegelmannProcStep0");
 
         CbinDataStruct::Write(fid, &WiegelmannProcStepMax, 1, "WiegelmannProcStepMax");
@@ -101,7 +102,8 @@ void DebugWritePars(char *fname, CagmVectorField * field, CagmScalarField * w)
         CbinDataStruct::Write(fid, &WiegelmannProcCondBase, 1, "WiegelmannProcCondBase");
         CbinDataStruct::Write(fid, &WiegelmannProcCondBase2, 1, "WiegelmannProcCondBase2");
 
-        int *N = field->GetDimensions();
+        int N[3];
+        field->dimensions(N);
         CbinDataStruct::Write(fid, N, 3, "N");
         CagmScalarField comp(N);
 

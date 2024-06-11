@@ -54,7 +54,8 @@ public:
         globalIdx = nullptr;
 
         autoParams = (Nseeds <= 0 || !seeds);
-        memcpy(NF, field->GetDimensions(), 3*sizeof(int));
+        field->dimensions(NF);
+        //memcpy(NF, field->GetDimensions(), 3*sizeof(int));
         int nVox = (autoParams ? NF[0]*NF[1]*NF[2] : Nseeds);
 
         InitQueue(nVox);

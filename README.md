@@ -61,3 +61,4 @@ Gelu M. Nita, Gregory D. Fleishman, Alexey A. Kuznetsov, Sergey A. Anfinogentov,
 	* Python wrapper update
 * 04 December 2023 (v 3.4.23.1203, rev. 797) - One-footpoint-line status bit added
 * 01 June 2024 (v 4.0.24.601, rev. 837) - Major update
+* 11 June 2024 (v 4.0.24.611, rev. 839) - Polishing

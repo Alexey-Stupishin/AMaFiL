@@ -36,6 +36,7 @@ d_mfoglobaldefineextern double WiegelmannWeightDivfree;
 d_mfoglobaldefineextern int WiegelmannBoundsCorrection;
 
 d_mfoglobaldefineextern double WiegelmannInversionTolerance;
+d_mfoglobaldefineextern double WiegelmannInversionDenom;
 
 d_mfoglobaldefineextern int WiegelmannDerivStencil;
 
