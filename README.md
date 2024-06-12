@@ -20,6 +20,8 @@ This repository contains submodule [common](https://github.com/Alexey-Stupishin/
 * _/Windows_ - MSVC project for Windows (Visual Studio 2015)
 * _/Linux_ - makefile (g++) for Linux
 
+see [Changelog](https://github.com/Alexey-Stupishin/Magnetic-Field_Library/blob/master/LICENCE.md) for history update
+
 For NLFFF Weghted method please refer to:
 Wiegelmann, T. Optimization code with weighting function for the reconstruction of coronal magnetic fields. _Solar Phys_., 2004, __219__, 87108. ([doi:10.1023/B:SOLA.0000021799.39465.36](https://link.springer.com/article/10.1023/B:SOLA.0000021799.39465.36), [ADS:2004SoPh..219...87W](https://ui.adsabs.harvard.edu/abs/2004SoPh..219...87W/abstract), [arXiv:0802.0124](https://arxiv.org/abs/0802.0124))
 
@@ -36,29 +38,3 @@ Fleishman, G., Myshyakov, I., Stupishin, A., Loukitcheva, M., Anfinogentov, S. F
 Fleishman, G., Anfinogentov, Stupishin, A., Kuznetsov, A., Nita, G. Coronal Heating Law Constrained by Microwave Gyroresonant Emission. _ApJ_, 2021, __909__, 89 ([doi:10.3847/1538-4357/abdab](https://iopscience.iop.org/article/10.3847/1538-4357/abdab1), [ADS:2021ApJ...909...89F](https://ui.adsabs.harvard.edu/abs/2021ApJ...909...89F/abstract), [arXiv:2101.03651](https://arxiv.org/abs/2101.03651))
 
 Gelu M. Nita, Gregory D. Fleishman, Alexey A. Kuznetsov, Sergey A. Anfinogentov, Alexey G. Stupishin, Eduard P. Kontar, Samuel J. Schonfeld, James A. Klimchuk, and Dale E. Gary. Data-constrained Solar Modeling with GX Simulator. _ApJSS_, 2023, __267__, 6 ([doi:10.3847/1538-4365/acd343](https://link.springer.com/article/10.1023/B:SOLA.0000021799.39465.36), [ADS:2023ApJS..267....6N](https://ui.adsabs.harvard.edu/abs/2023ApJS..267....6N/abstract), [arXiv:2301.00795](https://arxiv.org/abs/2301.00795))
-
-## Update History
-* 16 June 2020 - 1<sup>st</sup> release (v 2.1.20.428), [doi:10.5281/zenodo.3896223](https://zenodo.org/record/3896223#.Y13LRHZBxJQ)
-* 04 October 2020 (v 2.1.20.1004, rev.363): _weight_bound_size_ key added to _gx_box_make_nlfff_wwas_field.pro_, see comment inside
-* 25 January 2021 (v 2.2.21.125, rev.384): bug fixed (_extra parameters could prevent NLFFF in some cases)
-* 18 February 2021 (v 2.3.21.217, rev.392):
-	* bug fixed (it was crash when calculated with seeds)
-	* improvement (all lines calculated, even if seed below chromo_level); but only part above chromo_level is stored
-	* comment in _gx_box_calculate_lines.pro_ utility corrected, so that is less confusing
-* 16 October 2022 (v 2.4.22.1016, rev.625):
-	* small bug for short low loops fixed
-	* small lines wrapper correction
-	* Linux version started (at separate repository)
-* 30 October 2022 (v 3.4.22.1025, rev.626): 
-	* Major structure changes 
-	* Significant code reorganization for multiplatforming, change implementation to C++11 standard
-	* Linux version built
-* 23 August 2023
-	* Python wrapper
-* 30 August 2023 (v 3.4.23.745, rev.725): 
-	* Small polishing, version changed
-* 03 September 2023
-	* Python wrapper update
-* 04 December 2023 (v 3.4.23.1203, rev. 797) - One-footpoint-line status bit added
-* 01 June 2024 (v 4.0.24.601, rev. 837) - Major update
-* 11 June 2024 (v 4.0.24.611, rev. 839) - Polishing
