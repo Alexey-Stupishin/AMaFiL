@@ -141,6 +141,8 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     int z_size = N[2];
     int voxels = N[0]*N[1]*N[2];
 
+    proc->step_failed[0] = 0;
+
     while (true)
     {
         ///////////////////////
@@ -165,6 +167,7 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
                 reason = 1;
             else
                 step *= WiegelmannProcStepDecr;
+            (proc->step_failed[0])++;
         }
         else
         {
@@ -185,11 +188,12 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
             if (stepN > WiegelmannProcMaxSteps)
                 reason = 3;
             else
-                reason = proceedDL(dL / L0, L / L0, stepN, nullptr, memoryAv);
+                reason = proceedDL(dL/L0, L/L0, stepN, nullptr, memoryAv);
 
             if (callback && stepN%WiegelmannProtocolStep == 0)
-                callback(step / step0, 0, 0, 0, depth, dL / L0 / step, proc, field, &stop);
+                callback(step/step0, 0, 0, 0, depth, dL/L0/step, proc, field, &stop);
 
+            proc->step_failed[0] = 0;
             // theta etc. reasons from 8
         }
 
@@ -214,7 +218,7 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
             WiegelmannProcCondLOS, losField, losWeight, WiegelmannProcCondLOS2, losField2, losWeight2, &rotator);
 
     stop = reason;
-    proc->setBase(L / L0, step, stepN, depth, iterN, tic.toc(), z_size, voxels);
+    proc->setBase(L/L0, step, stepN, depth, iterN, tic.toc(), z_size, voxels);
     if (callback)
         callback(step/step0, 0, 0, 0, depth, dL/L0, proc, field, &stop);
 

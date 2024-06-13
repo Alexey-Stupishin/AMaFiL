@@ -2,7 +2,7 @@
 #include "mfoGlobals.h"
 #include "agmScalarField.h"
 #include "agmVectorField.h"
-#include "binUtilitiesW.h"
+#include "binUtilities.h"
 
 #ifdef _WINDOWS
 #pragma warning(disable:4996)
@@ -11,7 +11,7 @@
 #include "DebugWrite.h"
 #include "debug_data_trace_win.h"
 
-void DebugWriteData(CubeXD *v, char *fname, int depth, int iter)
+void DebugWriteData(CubeXD *v, const char *fname, int depth, int iter)
 {
 #ifdef _WINDOWS
     if (debug_input)
@@ -38,7 +38,7 @@ void DebugWriteData(CubeXD *v, char *fname, int depth, int iter)
 #endif
 }
 
-void DebugWritePars(char *fname, CagmVectorField * field, CagmScalarField * w)
+void DebugWritePars(const char *fname, CagmVectorField * field, CagmScalarField * w)
 {
 #ifdef _WINDOWS
     if (debug_input)
