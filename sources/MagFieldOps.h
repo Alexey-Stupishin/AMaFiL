@@ -8,8 +8,6 @@
 #define __declspec(dllexport) __attribute__((visibility ("default")))
 #endif
 
-enum w_priority : int { lowest = -2, low = -1, normal = 0, high = 1, highest = 2 };
-
 void _proceedGlobals(bool bGet = true);
 
 typedef uint32_t (*PROTO_mfoWiegelmannCallback) (double dstep, int d, int nChunks, int nTasks, 

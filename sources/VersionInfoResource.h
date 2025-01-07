@@ -5,11 +5,11 @@
 
 //-------------------------------------------------------------------------
 #define VIR_Ver1 4
-#define VIR_Ver2 0
-#define VIR_Ver3 24
-#define VIR_Ver4 613
-#define VIR_Revision 844
-#define VIR_Year 2024
+#define VIR_Ver2 1
+#define VIR_Ver3 25
+#define VIR_Ver4 103
+#define VIR_Revision 22
+#define VIR_Year 2025
 
 //-------------------------------------------------------------------------
 #define VIR_CompanyName "St. Petersburg State University, Russia"
@@ -20,4 +20,4 @@
 #define VIR_T_REV rev.
 #define VIR_T_LIBNAME : Weighted Wiegelmann NLFFF Reconstruction Library
 #define VIR_COPYRIGHT Copyright (C) Alexey G. Stupishin (agstup@yandex.ru)
-#define VIR_FROM 2017-
+#define VIR_FROM , 2017-

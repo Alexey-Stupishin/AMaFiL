@@ -8,6 +8,7 @@
 #include "agmRKF45.h"
 
 #include "console_debug.h"
+#include "DebugWrite.h"
 
 __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     uint32_t _cond, double chromoLevel,
@@ -38,7 +39,7 @@ __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
         processors.push_back(new LQPProcessor(supervisor, i, v, 0, step, tolerance, 0
             , boundAchieve, chromoLevel, maxResult, _voxelStatus, proc.get_sync()));
 
-    proc.proceed(processors, supervisor, -1);
+    proc.proceed(processors, supervisor, w_priority::low);
 
     console_debug("end of proceed")
 
@@ -53,10 +54,19 @@ __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
 
     console_debug("end of assign")
 
-        for (int i = 0; i < nProc; i++)
+    for (int i = 0; i < nProc; i++)
         delete processors[i];
 
     console_debug("processors deleted")
+
+    DebugWriteData(v, "debug_lines_field");
+    DebugWriteLines(v, "debug_lines", 
+        _seeds, _Nseeds,
+        supervisor->queue->nLines, supervisor->queue->nPassed,
+        _voxelStatus, _physLength, _avField, 
+        _linesLength, _codes,
+        _startIdx, _endIdx, _apexIdx,
+        supervisor->queue->cumLength, _coords, _linesStart, _linesIndex, seedIdx);
 
     delete supervisor;
 
@@ -79,7 +89,11 @@ __declspec(dllexport) uint32_t mfoGetLines(int *N,
 {
     console_start();
 
-    CagmVectorField *v = new CagmVectorField(N, Bx, By, Bz, true);
+    CagmVectorField *v;
+    if (debug_input)
+        v = new CagmVectorField(N, Bx, By, Bz);
+    else
+        v = new CagmVectorField(N, Bx, By, Bz, true);
 
     uint32_t rc = mfoGetLinesV(v,
         conditions, chromo_level,

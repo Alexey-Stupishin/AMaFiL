@@ -228,6 +228,7 @@ int mfoLines(int /* argc */, void* argv[])
     double toleranceClosed = 1e-2;     // 2do!
 
     _mapInt.insert({"reduce_passed", conditions});
+    _mapInt.insert({"debug_input", 0});
     _mapInt.insert({"n_processes", n_processes});
 
     _mapDouble.insert({ "chromo_level", chromo_level });
@@ -255,6 +256,7 @@ int mfoLines(int /* argc */, void* argv[])
     toleranceBound = _mapDouble["toleranceBound"];
     toleranceCoord = _mapDouble["toleranceCoord"];
     toleranceClosed = _mapDouble["toleranceClosed"];
+    debug_input = _mapInt["debug_input"];
 
     int *N = (int *)argv[c++];
     double *Bx = (double *)argv[c++];

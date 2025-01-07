@@ -20,36 +20,6 @@
 #include "agmVectorField.h"
 
 //------------------------------------------------------------------
-int getPriority(w_priority p)
-{
-    int sys_p = 0;
-#ifdef _WINDOWS
-    switch (p)
-    {
-        case lowest:
-            sys_p = THREAD_PRIORITY_LOWEST;
-            break;
-        case low:
-            sys_p = THREAD_PRIORITY_BELOW_NORMAL;
-            break;
-        case normal:
-            sys_p = THREAD_PRIORITY_NORMAL;
-            break;
-        case high:
-            sys_p = THREAD_PRIORITY_ABOVE_NORMAL;
-            break;
-        case highest:
-            sys_p = THREAD_PRIORITY_HIGHEST;
-            break;
-        default:
-            sys_p = THREAD_PRIORITY_BELOW_NORMAL;
-    }
-#endif
-
-    return sys_p;
-}
-
-//------------------------------------------------------------------
 bool mapIntproceed(bool bGet, std::string name, int &value, int defaultValue = 0)
 {
     auto search = mapInt.find(name);
@@ -92,36 +62,11 @@ bool mapDoubleproceed(bool bGet, std::string name, double &value, double default
 //------------------------------------------------------------------
 void _proceedGlobals(bool bGet)
 {
-    // mapIntproceed   (bGet, "synchronous", WiegelmannSynchronous, 1);
-    // mapIntproceed   (bGet, "show_progress", WiegelmannShowProgress, 1);
-    // mapDoubleproceed(bGet, "show_progress_time_quant", WiegelmannShowProgressTimeQuant, 1);
-    // mapIntproceed   (bGet, "timeout_ms", WiegelmannProcTimeoutMS, 60000);
-    //mapDoubleproceed(bGet, "d_functional_value_terminate_init", WiegelmannProcdLStopInit, 1e-4); // dL value ...
-    //mapDoubleproceed(bGet, "d_functional_value_terminate", WiegelmannProcdLStopMatr, 1e-4); 
-    //mapDoubleproceed(bGet, "d_functional_value_terminate_main", WiegelmannProcdLStopMain, 1e-4);
-    //mapIntproceed   (bGet, "d_functional_iterations_terminate_init", WiegelmannProcdLIterInit, 100); // ... during consequently iterations
-    //mapIntproceed   (bGet, "d_functional_iterations_terminate", WiegelmannProcdLIterMatr, 100);
-    //mapIntproceed   (bGet, "d_functional_iterations_terminate_main", WiegelmannProcdLIterMain, 100);
-    // mapDoubleproceed(bGet, "d_functional_value_max_inceasing_init", WiegelmannProcFunctionalLimitInit, 1e-4); // max. rel. avail. L increasing
-    // mapDoubleproceed(bGet, "d_functional_value_max_inceasing", WiegelmannProcFunctionalLimitMatr, 1e-4);
-    // mapDoubleproceed(bGet, "d_functional_value_max_inceasing_main", WiegelmannProcFunctionalLimitMain, 1e-4);
-    // int iWiegelmannMatryoshkaInterpolator;
-    // mapIntproceed   (bGet, "dense_grid_interpolator", iWiegelmannMatryoshkaInterpolator, 0);
-    // mapDoubleproceed(bGet, "dense_grid_interpolator_p1", WiegelmannMatryoshkaInterpolatorP1, 2.0);
-    // mapDoubleproceed(bGet, "dense_grid_interpolator_p2", WiegelmannMatryoshkaInterpolatorP2, 8.0);
-    // mapDoubleproceed(bGet, "dense_grid_interpolator_p3", WiegelmannMatryoshkaInterpolatorP3, 0.0);
-    // mapIntproceed   (bGet, "chunk_size_max", WiegelmannChunkSizeMax, 100);
-    // mapIntproceed   (bGet, "chunk_size_opt", WiegelmannChunkSizeOpt, 30);
-    // mapIntproceed   (bGet, "threads_priority", WiegelmannThreadPriority, 0);
-    // mapIntproceed   (bGet, "metrics_diff_init", WiegelmannGetMetricsDiffInit, 0);
-    // mapIntproceed   (bGet, "metrics_diff_prev", WiegelmannGetMetricsDiffPrev, 0);
-    // if (bGet)
-    // {
-    //     WiegelmannMatryoshkaInterpolator = (CagmVectorFieldOps::Interpolator)iWiegelmannMatryoshkaInterpolator;
-    // }
-    
+    int wp;
+    mapIntproceed   (bGet, "threads_priority", wp, (int)w_priority::low);
+    WiegelmannThreadPriority = (w_priority)wp;
+
     mapIntproceed   (bGet, "bounds_correction", WiegelmannBoundsCorrection, 0);
-    mapIntproceed   (bGet, "threads_priority", WiegelmannThreadPriority, low);
 
     mapIntproceed   (bGet, "weight_type", WiegelmannWeightType, SWF_COS);
     mapDoubleproceed(bGet, "weight_bound_size", WiegelmannWeightBound, 0.1);
@@ -183,8 +128,6 @@ __declspec( dllexport ) uint32_t utilInitialize()
 //------------------------------------------------------------------
 __declspec( dllexport ) int utilSetInt(char *query, int value)
 {
-    if (!strcmp(query, "threads_priority"))
-        value = getPriority((w_priority)value);
     bool isNew = mapIntproceed(false, query, value, value);
     _proceedGlobals();
     return (isNew ? 1 : 0);
@@ -228,7 +171,7 @@ __declspec(dllexport) int utilGetVersion(char *fullvers, int buflength)
     s += VIR_QUOTE_SUBST(VIR_Revision);
     s += "). ";
     s += VIR_QUOTE_SUBST(VIR_COPYRIGHT);
-    s += ", ";
+//    s += ", ";
     s += VIR_QUOTE_SUBST(VIR_FROM);
     s += VIR_QUOTE_SUBST(VIR_Year);
     s += ", ";
