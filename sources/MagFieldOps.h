@@ -8,8 +8,6 @@
 #define __declspec(dllexport) __attribute__((visibility ("default")))
 #endif
 
-enum w_priority : int { lowest = -2, low = -1, normal = 0, high = 1, highest = 2 };
-
 void _proceedGlobals(bool bGet = true);
 
 typedef uint32_t (*PROTO_mfoWiegelmannCallback) (double dstep, int d, int nChunks, int nTasks, 
@@ -19,6 +17,7 @@ typedef uint32_t (*PROTO_mfoWiegelmannCallback) (double dstep, int d, int nChunk
 typedef int (*PROTO_utilInitialize) ();
 typedef int (*PROTO_utilSetInt) (char *query, int value);
 typedef int (*PROTO_utilSetDouble) (char *query, double value);
+typedef int (*PROTO_utilSetSetting) (char *query, double value);
 typedef int (*PROTO_utilGetInt) (char *query, int *result);
 typedef int (*PROTO_utilGetDouble) (char *query, double *result);
 
@@ -63,6 +62,7 @@ __declspec( dllexport ) int utilSetInt(char *, int);
 __declspec( dllexport ) int utilGetInt(char *, int *);
 __declspec( dllexport ) int utilSetDouble(char *, double);
 __declspec( dllexport ) int utilGetDouble(char *, double *);
+__declspec( dllexport ) int utilSetSetting(char *, double);
 
 __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *, CagmScalarField *,
                                                      CagmVectorField *, CagmVectorField *, CagmVectorField *, CagmVectorField *,

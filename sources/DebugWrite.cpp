@@ -52,8 +52,9 @@ void DebugWritePars(const char *fname, CagmVectorField * field, CagmScalarField 
 
         CbinDataStruct::WriteHeader(fid);
 
+        int wp = (int)WiegelmannThreadPriority;
         CbinDataStruct::Write(fid, &CommonThreadsN, 1, "CommonThreadsN");
-        CbinDataStruct::Write(fid, &WiegelmannThreadPriority, 1, "WiegelmannThreadPriority");
+        CbinDataStruct::Write(fid, &wp, 1, "WiegelmannThreadPriority");
 
         CbinDataStruct::Write(fid, &WiegelmannBoundsCorrection, 1, "WiegelmannBoundsCorrection");
 
@@ -140,3 +141,66 @@ void DebugWritePars(const char *fname, CagmVectorField * field, CagmScalarField 
     }
 #endif
 }
+
+void DebugWriteLines(CubeXD *v, const char *fname, 
+    double *_seeds, int _Nseeds,
+    int _nLines, int _nPassed,
+    int *_voxelStatus, double *_physLength, double *_avField, 
+    int *_linesLength, int *_codes,
+    int *_startIdx, int *_endIdx, int *_apexIdx,
+    uint64_t _totalLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx
+    )
+{
+#ifdef _WINDOWS
+    if (debug_input)
+    {
+        char buffer[256];
+        strcpy(buffer, DEBUG_OUT_PATH);
+        strcat(buffer, fname);
+        strcat(buffer, ".bin");
+
+        FILE *fid = fopen(buffer, "wb");
+        CbinDataStruct::WriteHeader(fid);
+
+        int n_vox = _Nseeds == 0 ? v->size() : _Nseeds;
+        CbinDataStruct::Write(fid, &n_vox, 1, "n_vox");
+
+        if (_seeds)
+            CbinDataStruct::Write(fid, _seeds, _Nseeds*3, "seeds");
+
+        CbinDataStruct::Write(fid, &_nLines, 1, "nLines");
+        CbinDataStruct::Write(fid, &_nPassed, 1, "nPassed");
+
+        if (_voxelStatus)
+            CbinDataStruct::Write(fid, _voxelStatus, n_vox, "voxelStatus");
+        if (_physLength)
+            CbinDataStruct::Write(fid, _physLength, n_vox, "physLength");
+        if (_avField)
+            CbinDataStruct::Write(fid, _avField, n_vox, "avField");
+        if (_codes)
+            CbinDataStruct::Write(fid, _codes, n_vox, "codes");
+        if (_startIdx)
+            CbinDataStruct::Write(fid, _startIdx, n_vox, "startIdx");
+        if (_endIdx)
+            CbinDataStruct::Write(fid, _endIdx, n_vox, "endIdx");
+        if (_apexIdx)
+            CbinDataStruct::Write(fid, _apexIdx, n_vox, "apexIdx");
+        if (seedIdx)
+            CbinDataStruct::Write(fid, seedIdx, n_vox, "seedIdx");
+
+        CbinDataStruct::Write64(fid, (int64_t *)&_totalLength, 1, "totalLength");
+        if (_linesLength)
+            CbinDataStruct::Write(fid, _linesLength, _nLines, "linesLength");
+        if (_linesStart)
+            CbinDataStruct::Write64(fid, (int64_t *)_linesStart, _nLines, "linesStart");
+        if (_linesIndex)
+            CbinDataStruct::Write(fid, _linesIndex, _nLines, "linesIndex");
+        if (_coords)
+            CbinDataStruct::Write(fid, _coords, _totalLength*4, "coords");
+
+        CbinDataStruct::WriteFooter(fid);
+        fclose(fid);
+    }
+#endif
+}
+
