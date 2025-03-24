@@ -17,7 +17,7 @@
 #define VIR_OriginalFilename "WWNLFFFReconstruction.dll"
 #define VIR_ProductName "Weighted Wiegelmann NLFFF Reconstruction Library"
 
-#define VIR_T_REV rev.
-#define VIR_T_LIBNAME : Weighted Wiegelmann NLFFF Reconstruction Library
-#define VIR_COPYRIGHT Copyright (C) Alexey G. Stupishin (agstup@yandex.ru)
-#define VIR_FROM , 2017-
+#define VIR_T_REV "rev."
+#define VIR_T_LIBNAME ": Weighted Wiegelmann NLFFF Reconstruction Library"
+#define VIR_COPYRIGHT "Copyright (C) Alexey G. Stupishin (agstup@yandex.ru)"
+#define VIR_FROM ", 2017-"
