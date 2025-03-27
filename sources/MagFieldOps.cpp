@@ -196,12 +196,24 @@ __declspec(dllexport) int utilGetVersion(char *fullvers, int buflength)
     s += ".";
     s += VIR_QUOTE_SUBST(VIR_Ver4);
     s += " (";
+#ifdef _WINDOWS
     s += VIR_QUOTE_SUBST(VIR_T_REV);
+#else
+    s += VIR_T_REV;
+#endif
     s += VIR_QUOTE_SUBST(VIR_Revision);
     s += "). ";
+#ifdef _WINDOWS
     s += VIR_QUOTE_SUBST(VIR_COPYRIGHT);
+#else
+    s += VIR_COPYRIGHT;
+#endif
 //    s += ", ";
+#ifdef _WINDOWS
     s += VIR_QUOTE_SUBST(VIR_FROM);
+#else
+    s += VIR_FROM;
+#endif
     s += VIR_QUOTE_SUBST(VIR_Year);
     s += ", ";
     s += VIR_CompanyName;
