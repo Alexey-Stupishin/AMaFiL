@@ -2,6 +2,7 @@
 *.sdf
 *.aps
 *.opendb
+*.user
 /.vs
 /Debug
 MagFieldOpsWork.vcxproj
