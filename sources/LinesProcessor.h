@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LinesTaskQueue11.h"
+#include "TimeTicToc.h"
 
 class CLinesTaskQueue;
 class CagmVectorField;
@@ -27,7 +28,7 @@ protected:
     LQPSupervisor *supervisor;
 
 public:
-    CLinesProcessor(LQPSupervisor *, CagmVectorField *, int, double, double, double, double, double, int, int *);
+    CLinesProcessor(LQPSupervisor *, CagmVectorField *, int, double, double, double, double, double, int, int *, int, double);
     virtual ~CLinesProcessor();
 
     virtual uint32_t setTaskParams(void * params);

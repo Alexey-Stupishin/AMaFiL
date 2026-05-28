@@ -222,14 +222,17 @@ int mfoLines(int /* argc */, void* argv[])
     int n_processes = 0;
     double chromo_level = 1;
     double step = 1;
-    double tolerance = 1e-3;
+    double tolerance = 1e-4;
     double toleranceBound = 1e-3;
     double toleranceCoord = 1e-3;      // 2do!
     double toleranceClosed = 1e-2;     // 2do!
+    int n_loop_control = 200;
+    double loop_abs_cell = 1.5;
 
     _mapInt.insert({"reduce_passed", conditions});
     _mapInt.insert({"debug_input", 0});
     _mapInt.insert({"n_processes", n_processes});
+    _mapInt.insert({"n_loop_control", n_loop_control});
 
     _mapDouble.insert({ "chromo_level", chromo_level });
     _mapDouble.insert({ "step", step });
@@ -237,6 +240,7 @@ int mfoLines(int /* argc */, void* argv[])
     _mapDouble.insert({ "toleranceBound", toleranceBound });
     _mapDouble.insert({ "toleranceCoord", toleranceCoord });
     _mapDouble.insert({ "toleranceClosed", toleranceClosed });
+    _mapDouble.insert({ "loop_abs_cell", loop_abs_cell});
 
     int c = 0;
     //#pragma pack(push, 1)
@@ -258,6 +262,9 @@ int mfoLines(int /* argc */, void* argv[])
     toleranceClosed = _mapDouble["toleranceClosed"];
     debug_input = _mapInt["debug_input"];
 
+    n_loop_control = _mapInt["n_loop_control"];
+    loop_abs_cell = _mapDouble["loop_abs_cell"];
+    
     int *N = (int *)argv[c++];
     double *Bx = (double *)argv[c++];
     double *By = (double *)argv[c++];
@@ -290,15 +297,17 @@ int mfoLines(int /* argc */, void* argv[])
     int *linesIndex = (int *)argv[c++];
 
     int *codes = (int *)argv[c++];
+    double *times = (double *)argv[c++];
 
     return mfoGetLines(N, Bx, By, Bz,
         conditions, chromo_level,
         seeds, Nseeds,
         n_processes,
         step, tolerance, toleranceBound,
+        n_loop_control, loop_abs_cell,
         nLines, nPassed,
         status, physLength, avField,
         linesLength, codes,
         startIdx, endIdx, apexIdx,
-        maxLength, totalLength, coord, linesStart, linesIndex, seedIdx);
+        maxLength, totalLength, coord, linesStart, linesIndex, seedIdx, times);
 }

@@ -18,8 +18,10 @@
 #define LIB_STATE_LIB_NOT_INIT              0x80010000
 #define LIB_STATE_NO_PARAMETER              0x80020000
 
-//d_mfoglobaldefineextern BWndDebug *debugtrace;
-//d_mfoglobaldefineextern BWndDebug *debugtrace2;
+#ifdef _WINDOWS
+#include "WndDebug.h"
+d_mfoglobaldefineextern BWndDebug *debugtrace;
+#endif
 
 d_mfoglobaldefineextern int gstcLibraryInit
 #ifdef d_mfoglobaldefine
@@ -60,6 +62,9 @@ d_mfoglobaldefineextern double WiegelmannProcStepLimInit;
 d_mfoglobaldefineextern double WiegelmannProcStepLimMatr;
 d_mfoglobaldefineextern double WiegelmannProcStepLimMain;
 
+d_mfoglobaldefineextern double WiegelmannProcStepIncrFactor;
+d_mfoglobaldefineextern double WiegelmannProcStepDecrFactor;
+
 d_mfoglobaldefineextern int WiegelmannProcdLStdWin;
 d_mfoglobaldefineextern int WiegelmannProcdLStdWinInit;
 d_mfoglobaldefineextern int WiegelmannProcdLStdWinMatr;
@@ -89,5 +94,25 @@ d_mfoglobaldefineextern w_priority WiegelmannThreadPriority;
 
 d_mfoglobaldefineextern int WiegelmannProtocolStep;
 d_mfoglobaldefineextern int debug_input;
+
+d_mfoglobaldefineextern double Disambig_KTFactor_vp;
+d_mfoglobaldefineextern double Disambig_KTFactor_v0;
+d_mfoglobaldefineextern double Disambig_KTFactor_M;
+d_mfoglobaldefineextern double Disambig_KTFactor_p;
+d_mfoglobaldefineextern double Disambig_KTFactor_init;
+
+d_mfoglobaldefineextern double Disambig_ordpart;
+d_mfoglobaldefineextern int Disambig_limacc;
+d_mfoglobaldefineextern int Disambig_limatt;
+
+d_mfoglobaldefineextern double Disambig_temp_decr;
+d_mfoglobaldefineextern double Disambig_temp_min;
+d_mfoglobaldefineextern double Disambig_acc2att;
+d_mfoglobaldefineextern int Disambig_min_generation;
+
+d_mfoglobaldefineextern double Disambig_Bmax_term;
+d_mfoglobaldefineextern double Disambig_non_stable_term;
+
+d_mfoglobaldefineextern int Disambig_parallel;
 
 #undef d_mfoglobaldefineextern

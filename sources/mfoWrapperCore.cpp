@@ -1,5 +1,6 @@
 #include "mfoGlobals.h"
 #include "MagFieldOps.h"
+#include "agpWiegelmannPar.h"
 
 uint32_t mfoNLFFFCore(int *N, double *Bx, double *By, double *Bz)
 {
@@ -19,4 +20,9 @@ uint32_t mfoNLFFFCore(int *N, double *Bx, double *By, double *Bz)
     v->GetComp(Bz, 2);
 
     return 0;
+}
+
+uint64_t mfoNLFFFMemory(int *N, int nProc)
+{
+    return CagpWiegelmann::estimateMemory(N, nProc, true);
 }

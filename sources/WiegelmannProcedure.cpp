@@ -8,41 +8,8 @@
 #include "console_debug.h"
 #include "debug_data_trace_win.h"
 #include "DebugWrite.h"
-
-static aguTimeTicToc tic;
-
-static double get_max_L_incr(int *N)
-{
-    return DBL_EPSILON * sqrt(N[0] * N[1] * N[2]);
-}
-
-static int proceedDL(double /* dL */, double L, int stepN, double * /* mL */, double *mAv)
-{
-    if (stepN == 0)
-        mAv[stepN] = 0.0;
-    else if (stepN < WiegelmannProcdLStdWin)
-        mAv[stepN] = L;
-    else
-    {
-        for (int k = 1; k < WiegelmannProcdLStdWin; k++)
-            mAv[k-1] = mAv[k];
-        mAv[WiegelmannProcdLStdWin-1] = L;
-
-        double s = 0, s2 = 0;
-        for (int k = 0; k < WiegelmannProcdLStdWin; k++)
-        {
-            s += mAv[k];
-            s2 += mAv[k]*mAv[k];
-        }
-
-        double w = WiegelmannProcdLStdWin;
-        double var = sqrt(w/(w-1)*(w*s2/(s*s)-1));
-        if (var < WiegelmannProcdLStdVal)
-            return 7;
-    }
-
-     return 0;
-}
+#include "WndDebug.h"
+#include "WProcCore.h"
 
 uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *weight, 
     CagmVectorField *baseField, CagmVectorField *baseWeight, CagmVectorField *baseField2, CagmVectorField *baseWeight2,
@@ -51,182 +18,16 @@ uint32_t mfoWiegelmannProcedureCore(CagmVectorField *field, CagmScalarField *wei
     CagmScalarField *bottomWeight,
     double *vcos, int depth, PROTO_mfoWiegelmannCallback callback, double *maxStep)
 {
-    int N[3];
-    field->dimensions(N);
+    *maxStep = 0;
 
-    double *memoryAv = new double[WiegelmannProcdLStdWin];
+    CWProcCore core(field, weight, 
+    baseField, baseWeight, baseField2, baseWeight2,
+    absField, absWeight, absField2, absWeight2,
+    losField, losWeight, losField2, losWeight2,
+    bottomWeight,
+    vcos, depth, callback);
 
-    CagmVectorField *vF = new CagmVectorField(field);
-
-    int NB[3];
-    memcpy(NB, N, 3*sizeof(int));
-    NB[0] = 2;
-    CagmVectorField boundsx(NB);
-    memcpy(NB, N, 3*sizeof(int));
-    NB[1] = 2;
-    CagmVectorField boundsy(NB);
-    memcpy(NB, N, 3*sizeof(int));
-    NB[2] = 2;
-    CagmVectorField boundsz(NB);
-    field->getBounds(&boundsx, &boundsy, &boundsz);
- 
-    CagmRotate3D rotator(vcos);
-
-    if (WiegelmannProcCondType == 2)
-        field->condWeight(WiegelmannProcCondBase, baseField, baseWeight, WiegelmannProcCondBase2, baseField2, baseWeight2,
-            WiegelmannProcCondAbs, absField, absWeight, WiegelmannProcCondAbs2, absField2, absWeight2,
-            WiegelmannProcCondLOS, losField, losWeight, WiegelmannProcCondLOS2, losField2, losWeight2, &rotator);
-
-    CagpWiegelmann *proc = new CagpWiegelmann(N, CommonThreadsN, WiegelmannDerivStencil
-        , field, weight
-        , vcos
-        , vF
-        , baseField, baseWeight
-        , absField, absWeight
-        , losField, losWeight
-        , bottomWeight
-        , depth
-        , WiegelmannThreadPriority
-        );
-
-    DebugWriteData(field, "debug_B", depth);
-
-    proc->max_dL_incr = get_max_L_incr(N);
-
-    int stepN = 0;
-    int stop = 0;
-
-    int iterN = 0;
-    double L0 = proc->step(iterN);
-    iterN++;
-    double step0 = sqrt(proc->B2sum[0]/proc->F2max[0])/(N[0]*N[1]*N[2]) * WiegelmannProcStep0;
-
-    DebugWriteData(vF, "debug_vF", depth);
-
-    double L, Lprev = L0;
-    proceedDL(0.0, 0.0, 0, nullptr, memoryAv);
-
-    CagmVectorField *prevField = new CagmVectorField(field, true);
-    CagmVectorField *prevVF = new CagmVectorField(vF, true);
-
-    double step = step0, dL;
-    *maxStep = step0;
-
-    int reason = 0;
-
-    double Lptest = L0;
-    while (true)
-    {
-        field->Copy(prevField);
-        vF->Copy(prevVF);
-        ///////////////////////
-        vF->mult(step);
-        field->add(vF);
-        field->setBounds(&boundsx, &boundsy, &boundsz);
-        ///////////////////////
-        L = proc->step(iterN);
-        iterN++;
-
-        if (L >= Lptest)
-            break;
-
-        Lptest = L;
-        step *= 2;
-    }
-    step0 = step * WiegelmannProcStep0;
-    step = step0;
-    field->Copy(prevField);
-    vF->Copy(prevVF);
-
-    int z_size = N[2];
-    int voxels = N[0]*N[1]*N[2];
-
-    proc->step_failed[0] = 0;
-
-    while (true)
-    {
-        ///////////////////////
-        vF->mult(step);
-        field->add(vF);
-        field->setBounds(&boundsx, &boundsy, &boundsz);
-        ///////////////////////
-        if (WiegelmannProcCondType == 2)
-            field->condWeight(WiegelmannProcCondBase, baseField, baseWeight, WiegelmannProcCondBase2, baseField2, baseWeight2,
-                WiegelmannProcCondAbs, absField, absWeight, WiegelmannProcCondAbs2, absField2, absWeight2,
-                WiegelmannProcCondLOS, losField, losWeight, WiegelmannProcCondLOS2, losField2, losWeight2, &rotator);
-
-        L = proc->step(iterN);
-        iterN++;
-
-        dL = Lprev - L;
-        if (dL/Lprev <= - proc->max_dL_incr)
-        {
-            field->Copy(prevField);
-            vF->Copy(prevVF);
-            if (step < step0*WiegelmannProcStepLim)
-                reason = 1;
-            else
-                step *= WiegelmannProcStepDecr;
-            (proc->step_failed[0])++;
-        }
-        else
-        {
-            stepN++;
-
-            proc->setBase(L/L0, step, stepN, depth, iterN, tic.toc(), z_size, voxels);
-
-            Lprev = L;
-            prevField->Copy(field);
-            prevVF->Copy(vF);
-
-            step *= WiegelmannProcStepIncr;
-            if (step > step0*WiegelmannProcStepMax)
-                step = step0*WiegelmannProcStepMax;
-            if (step > *maxStep)
-                *maxStep = step;
-
-            if (stepN > WiegelmannProcMaxSteps)
-                reason = 3;
-            else
-                reason = proceedDL(dL/L0, L/L0, stepN, nullptr, memoryAv);
-
-            if (callback && stepN%WiegelmannProtocolStep == 0)
-                callback(step/step0, 0, 0, 0, depth, dL/L0/step, proc, field, &stop);
-
-            proc->step_failed[0] = 0;
-            // theta etc. reasons from 8
-        }
-
-        if (reason != 0)
-        {
-            field->Copy(prevField);
-            vF->Copy(prevVF);
-            break;
-        }
-
-        if (stop)
-        {
-            reason = 4;
-            break;
-        }
-    }
-
-    field->setBounds(&boundsx, &boundsy, &boundsz);
-    if (WiegelmannProcCondType == 2)
-        field->condWeight(WiegelmannProcCondBase, baseField, baseWeight, WiegelmannProcCondBase2, baseField2, baseWeight2,
-            WiegelmannProcCondAbs, absField, absWeight, WiegelmannProcCondAbs2, absField2, absWeight2,
-            WiegelmannProcCondLOS, losField, losWeight, WiegelmannProcCondLOS2, losField2, losWeight2, &rotator);
-
-    stop = reason;
-    proc->setBase(L/L0, step, stepN, depth, iterN, tic.toc(), z_size, voxels);
-    if (callback)
-        callback(step/step0, 0, 0, 0, depth, dL/L0, proc, field, &stop);
-
-    delete prevField;
-    delete prevVF;
-    delete vF;
-    delete proc;
-    delete [] memoryAv;
+    int reason  = core.proceed();
 
     return reason;
 }
@@ -247,6 +48,11 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
     CagmScalarField *bottomWeight,
     double *vcos, PROTO_mfoWiegelmannCallback callback)
 {
+#ifdef _DEBUG_MEMORY
+    debugtrace = new BWndDebug("C:\\temp\\W2Memory.log", "wb", TRUE, NULL, FALSE, TRUE);
+    debugtrace->memory("Start");
+#endif
+
     DebugWritePars("debug_input", field, weight);
     DebugWriteData(field, "debug_B");
     DebugWriteData(weight, "debug_W");
@@ -280,8 +86,6 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
             bMatr = false;
     }
 
-    tic.tic();
-
     uint32_t dwRC = 0;
     if (!bMatr)
     {
@@ -296,6 +100,9 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
     }
     else
     {
+#ifdef _DEBUG_MEMORY
+    debugtrace->Say("*** depth %d", depth);
+#endif
         double factor = WiegelmannMatryoshkaFactor;
         int *Ns = new int[3*depth];
         double *steps = new double[3*depth];
@@ -341,6 +148,10 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
         CagmVectorField *v1;
         for (int i = depth-2; i > 0; i--)
         {
+#ifdef _DEBUG_MEMORY
+    debugtrace->Say("*** depth %d", i+1);
+    debugtrace->memory("  pre core");
+#endif
             WiegelmannProcStepIncr = WiegelmannProcStepIncrMatr;
             WiegelmannProcStepDecr = WiegelmannProcStepDecrMatr;
             WiegelmannProcStepLim = WiegelmannProcStepLimMatr;
@@ -358,8 +169,14 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
             mfoWiegelmannProcedureCore(v1, sW0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, vcos, i+1, callback, &maxStep);
             delete sW0;
             v0 = v1;
+#ifdef _DEBUG_MEMORY
+    debugtrace->memory("  end core");
+#endif
         }
 
+#ifdef _DEBUG_MEMORY
+    debugtrace->Say("*** depth %d", 1);
+#endif
         int NB[3];
         field->dimensions(NB);
         NB[0] = 2;
@@ -391,6 +208,10 @@ __declspec( dllexport ) uint32_t mfoWiegelmannProcedure(CagmVectorField *field, 
                                           absField, absWeight, absField2, absWeight2, 
                                           losField, losWeight, losField2, losWeight2, bottomWeight, vcos, 1, callback, &maxStep);
     }
+
+#ifdef _DEBUG_MEMORY
+    debugtrace->memory("End");
+#endif
 
     return dwRC;
 }

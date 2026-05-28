@@ -28,6 +28,7 @@ protected:
     double *physLength, *avField;
     int *startIdx, *endIdx, *apexIdx;
     int *codes;
+    double *times;
     int *voxelStatus;
 
     // length = maxCoordLength x 3, 2-D
@@ -55,7 +56,7 @@ public:
     CLinesTaskQueue(CagmVectorFieldOps *_field,
         uint32_t _cond = 0x3, double _chromoLevel = 0,
         double *_physLength = nullptr, double *_avField = nullptr,
-        int *_voxelStatus = nullptr, int *_codes = nullptr,
+        int *_voxelStatus = nullptr, int *_codes = nullptr, double *_times = nullptr,
         int *_startIdx = nullptr, int *_endIdx = nullptr, int *_apexIdx = nullptr,
         int maxResult = 50000,
         uint64_t _maxCoordLength = 0, int *_linesLength = nullptr, double *_coords = nullptr, uint64_t *_linesStart = nullptr, int *_linesIndex = nullptr, int *_seedIdx = nullptr)
@@ -67,6 +68,7 @@ public:
         , maxCoordLength(_maxCoordLength)
         , linesLength(_linesLength)
         , codes(_codes)
+        , times(_times)
         , voxelStatus(_voxelStatus)
         , physLength(_physLength)
         , avField(_avField)
@@ -137,7 +139,7 @@ public:
 #define FS_OUT  2
 #define FS_END  3
 
-    virtual uint32_t processLine(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over)
+    virtual uint32_t processLine(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over, double time)
     {
         if (voxelStatus)
             setVoxelStatus(queueID, Status::Processed, true);
@@ -155,6 +157,8 @@ public:
             avField[queueID] = 0;
         if (codes)
             codes[queueID] = 0;
+        if (times)
+            times[queueID] = time;
 
         double thisPhysLength = 0;
         double thisAvField = 0;
@@ -377,8 +381,8 @@ public:
         return 0;
     }
 
-    uint32_t SetResult(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over)
+    uint32_t SetResult(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over, double time)
     {
-        return processLine(queueID, point, result, resLength, _code, _code4over);
+        return processLine(queueID, point, result, resLength, _code, _code4over, time);
     }
 };

@@ -127,6 +127,8 @@ __declspec( dllexport ) int utilSetSetting(char *query, double value)
 //------------------------------------------------------------------
 void _proceedGlobals(bool bGet)
 {
+    mapIntProceed   (bGet, "n_processes", CommonThreadsN, 0);
+
     int wp;
     mapIntProceed   (bGet, "threads_priority", wp, (int)w_priority::low);
     WiegelmannThreadPriority = (w_priority)wp;
@@ -156,6 +158,9 @@ void _proceedGlobals(bool bGet)
     mapDoubleProceed(bGet, "step_terminate", WiegelmannProcStepLimMatr, 0.01);
     mapDoubleProceed(bGet, "step_terminate_main", WiegelmannProcStepLimMain, 0.0001);
 
+    mapDoubleProceed(bGet, "step_increment_factor", WiegelmannProcStepIncrFactor, 1.0);
+    mapDoubleProceed(bGet, "step_decrement_factor", WiegelmannProcStepDecrFactor, 1.0);
+
     mapDoubleProceed(bGet, "d_functional_stdev_value_init", WiegelmannProcdLStdValInit, 5e-4); // min std(rel. dL) ...
     mapDoubleProceed(bGet, "d_functional_stdev_value", WiegelmannProcdLStdValMatr, 5e-4);
     mapDoubleProceed(bGet, "d_functional_stdev_value_main", WiegelmannProcdLStdValMain, 5e-4);
@@ -180,6 +185,23 @@ void _proceedGlobals(bool bGet)
 
     mapIntProceed   (bGet, "metrics_theta", WiegelmannGetMetricsTheta, 0);
     mapIntProceed   (bGet, "debug_input", debug_input, 0);
+
+    mapIntProceed(bGet, "disambig_parallel", Disambig_parallel, 0);
+    mapIntProceed(bGet, "disambig_limacc", Disambig_limacc, 3);
+    mapIntProceed(bGet, "disambig_limatt", Disambig_limatt, 5);
+    mapIntProceed(bGet, "disambig_min_generation", Disambig_min_generation, 100);
+
+    mapDoubleProceed(bGet, "disambig_ktfactor_vp", Disambig_KTFactor_vp, 1.0);
+    mapDoubleProceed(bGet, "disambig_ktfactor_v0", Disambig_KTFactor_v0, 10.0);
+    mapDoubleProceed(bGet, "disambig_ktfactor_M", Disambig_KTFactor_M, 100.0);
+    mapDoubleProceed(bGet, "disambig_ktfactor_p", Disambig_KTFactor_p, 0.25);
+    mapDoubleProceed(bGet, "disambig_ktfactor_init", Disambig_KTFactor_init, 0.5);
+    mapDoubleProceed(bGet, "disambig_ordpart", Disambig_ordpart, 1.0);
+    mapDoubleProceed(bGet, "disambig_temp_decr", Disambig_temp_decr, 0.99);
+    mapDoubleProceed(bGet, "disambig_temp_min", Disambig_temp_min, 0.005);
+    mapDoubleProceed(bGet, "disambig_acc2att", Disambig_acc2att, 0.005);
+    mapDoubleProceed(bGet, "disambig_Bmax_term", Disambig_Bmax_term, 200);
+    mapDoubleProceed(bGet, "disambig_non_stable_term", Disambig_non_stable_term, 0.005);
 }
 
 //------------------------------------------------------------------

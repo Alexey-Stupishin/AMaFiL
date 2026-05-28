@@ -15,13 +15,15 @@ __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     double *_seeds, int _Nseeds,
     int nProc,
     double step, double tolerance, double boundAchieve,
+    int _n_loop_control, double loop_abs_cell,
     int *_nLines, int *_nPassed,
     int *_voxelStatus, double *_physLength, double *_avField, 
     int *_linesLength, int *_codes,
     int *_startIdx, int *_endIdx, int *_apexIdx,
-    uint64_t _maxCoordLength, uint64_t *_totalLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx)
+    uint64_t _maxCoordLength, uint64_t *_totalLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx, double *_times)
 {
     nProc = TaskQueueProcessor::getProcInfo(nProc);
+    nProc = _Nseeds > 0 ? (_Nseeds < nProc ? _Nseeds : nProc) : nProc;
     TaskQueueProcessor proc(nProc);
 
     int maxResult = 50000;
@@ -30,14 +32,14 @@ __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     LQPSupervisor *supervisor = new LQPSupervisor(v, _cond, chromoLevel,
         _seeds, _Nseeds,
         _voxelStatus, _physLength, _avField,
-        _linesLength, _codes,
+        _linesLength, _codes, _times,
         _startIdx, _endIdx, _apexIdx,
         _maxCoordLength, _coords, _linesStart, _linesIndex, seedIdx, &factory, proc.get_sync());
 
     std::vector<ATQPProcessor *> processors;
     for (int i = 0; i < nProc; i++)
         processors.push_back(new LQPProcessor(supervisor, i, v, 0, step, tolerance, 0
-            , boundAchieve, chromoLevel, maxResult, _voxelStatus, proc.get_sync()));
+            , boundAchieve, chromoLevel, maxResult, _voxelStatus, proc.get_sync(), _n_loop_control, loop_abs_cell));
 
     proc.proceed(processors, supervisor, w_priority::low);
 
@@ -81,11 +83,12 @@ __declspec(dllexport) uint32_t mfoGetLines(int *N,
     double *seeds, int Nseeds,
     int nProc,
     double step, double tolerance, double toleranceBound,
+    int _n_loop_control, double loop_abs_cell,
     int *nLines, int *nPassed,
     int *status, double *physLength, double *avField, 
     int *linesLength, int *codes,
     int *startIdx, int *endIdx, int *apexIdx,
-    uint64_t maxCoordLength, uint64_t *totalLength, double *coord, uint64_t *linesStart, int *linesIndex, int *seedIdx)
+    uint64_t maxCoordLength, uint64_t *totalLength, double *coord, uint64_t *linesStart, int *linesIndex, int *seedIdx, double *times)
 {
     console_start();
 
@@ -100,11 +103,12 @@ __declspec(dllexport) uint32_t mfoGetLines(int *N,
         seeds, Nseeds,
         nProc,
         step, tolerance, toleranceBound,
+        _n_loop_control, loop_abs_cell,
         nLines, nPassed,
         status, physLength, avField,
         linesLength, codes,
         startIdx, endIdx, apexIdx,
-        maxCoordLength, totalLength, coord, linesStart, linesIndex, seedIdx);
+        maxCoordLength, totalLength, coord, linesStart, linesIndex, seedIdx, times);
 
     delete v;
 

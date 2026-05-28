@@ -38,14 +38,14 @@ public:
     CNLFFFLinesTaskQueue(CagmVectorFieldOps *_field, double *_seeds, int _Nseeds,
         uint32_t _cond = 0x3, double _chromoLevel = 0,
         double *_physLength = nullptr, double *_avField = nullptr,
-        int *_voxelStatus = nullptr, int *_codes = nullptr,
+        int *_voxelStatus = nullptr, int *_codes = nullptr, double *_times = nullptr,
         int *_startIdx = nullptr, int *_endIdx = nullptr, int *_apexIdx = nullptr,
         int maxResult = 50000,
         uint64_t _maxCoordLength = 0, int *_linesLength = nullptr, double *_coords = nullptr, uint64_t *_linesStart = nullptr, int *_linesIndex = nullptr, int *seedIdx = nullptr)
         : CLinesTaskQueue(_field, 
             _cond, _chromoLevel,
             _physLength, _avField,
-            _voxelStatus, _codes, 
+            _voxelStatus, _codes, _times, 
             _startIdx, _endIdx, _apexIdx, maxResult,
             _maxCoordLength, _linesLength, _coords, _linesStart, _linesIndex, seedIdx)
       , seeds(_seeds)

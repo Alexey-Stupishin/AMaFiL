@@ -48,7 +48,7 @@ public:
         uint32_t _cond, double chromoLevel,
         double *_seeds, int _Nseeds,
         int *_voxelStatus, double *_physLength, double *_avField,
-        int *_linesLength, int *_codes,
+        int *_linesLength, int *_codes, double *_times,
         int *_startIdx, int *_endIdx, int *_apexIdx,
         uint64_t _maxCoordLength, double *_coords, uint64_t *_linesStart, int *_linesIndex, int *seedIdx,
         LQPTaskFactory *factory, ATQPSynchonizer *_sync)
@@ -58,7 +58,7 @@ public:
 
         queue = new CNLFFFLinesTaskQueue(v, _seeds, _Nseeds, _cond, chromoLevel,
             _physLength, _avField,
-            _voxelStatus, _codes,
+            _voxelStatus, _codes, _times,
             _startIdx, _endIdx, _apexIdx,
             maxResult,
             4 * _maxCoordLength, _linesLength, _coords, _linesStart, _linesIndex, seedIdx);
@@ -92,10 +92,10 @@ public:
         return queue->needProcessing(queueID);
     }
 
-    uint32_t SetResult(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over)
+    uint32_t SetResult(uint32_t queueID, double *point, double *result, int resLength, int _code, int _code4over, double time)
     {
         std::unique_lock<std::mutex> locker(mutex_store);
-        uint32_t res = queue->SetResult(queueID, point, result, resLength, _code, _code4over);
+        uint32_t res = queue->SetResult(queueID, point, result, resLength, _code, _code4over, time);
 
         return res;
     }
