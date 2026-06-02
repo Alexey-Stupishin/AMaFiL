@@ -46,7 +46,7 @@ protected:
 public:
     LQPSupervisor(CagmVectorField *v,
         uint32_t _cond, double chromoLevel,
-        double *_seeds, int _Nseeds,
+        double *_seeds, int _Nseeds, double relSeedsBound,
         int *_voxelStatus, double *_physLength, double *_avField,
         int *_linesLength, int *_codes, double *_times,
         int *_startIdx, int *_endIdx, int *_apexIdx,
@@ -56,7 +56,7 @@ public:
     {
         int maxResult = 50000;
 
-        queue = new CNLFFFLinesTaskQueue(v, _seeds, _Nseeds, _cond, chromoLevel,
+        queue = new CNLFFFLinesTaskQueue(v, _seeds, _Nseeds, relSeedsBound, _cond, chromoLevel,
             _physLength, _avField,
             _voxelStatus, _codes, _times,
             _startIdx, _endIdx, _apexIdx,

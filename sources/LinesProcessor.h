@@ -17,7 +17,7 @@ protected:
     CagmVectorField *v;
     int dir;
     double step;
-    double boundAchieve, boundAchieveBottom;
+    double absBoundAchieve, relBoundAchieve;
     int maxLength;
     int *passed;
     double *coord;

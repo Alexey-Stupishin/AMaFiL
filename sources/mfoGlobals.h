@@ -115,4 +115,14 @@ d_mfoglobaldefineextern double Disambig_non_stable_term;
 
 d_mfoglobaldefineextern int Disambig_parallel;
 
+d_mfoglobaldefineextern int lines_conditions;
+d_mfoglobaldefineextern double lines_chromo_level;
+d_mfoglobaldefineextern double lines_step;
+d_mfoglobaldefineextern double lines_tolerance;
+d_mfoglobaldefineextern double lines_abs_bound_achieve;
+d_mfoglobaldefineextern double lines_rel_bound_achieve;
+d_mfoglobaldefineextern double lines_rel_seeds_bound;
+d_mfoglobaldefineextern int lines_n_loop_control;
+d_mfoglobaldefineextern double lines_loop_abs_cell;
+
 #undef d_mfoglobaldefineextern

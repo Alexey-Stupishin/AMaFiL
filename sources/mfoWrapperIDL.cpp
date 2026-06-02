@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "mfoGlobals.h"
 #include "MagFieldOps.h"
+#include "agpWiegelmannPar.h"
+#include "availMem.h"
+
 #include "console_debug.h"
 
 #include "idl_export_ext.h"
@@ -18,13 +21,26 @@ int mfoNLFFFVersion(int /* argc */, void* argv[])
     return L;
 }
 
+double mfoNLFFFMemoryIDL(int /* argc */, void* argv[])
+{
+    int c = 0;
+    int *N = (int *)argv[c++];
+    int n_proc = *(int *)argv[c++];
+    uint64_t *p_est = (uint64_t *)argv[c++];
+    uint64_t *p_avail = (uint64_t *)argv[c++];
+    *p_est = CagpWiegelmann::estimateMemory(N, n_proc);
+    *p_avail = availableMemory();
+
+    return (double)*p_est / (double)*p_avail;
+}
+
 int mfoNLFFF(int argc, void* argv[])
 {
     utilInitialize();
 
     CidlPassParameterMap *m = (CidlPassParameterMap *)argv[0];
-    /* int nErrors = */
-    m->parse(&mapInt, &mapuint64_t, &mapDouble);
+    if (m->parse(&mapInt, &mapuint64_t, &mapDouble) != 0)
+        return LIB_STATE_NO_PARAMETER;
     _proceedGlobals();
 
     int *N = (int *)argv[1];
@@ -214,56 +230,14 @@ int mfoNLFFF(int argc, void* argv[])
 
 int mfoLines(int /* argc */, void* argv[])
 {
-    std::map<std::string, int> _mapInt;
-    std::map<std::string, uint64_t> _mapuint64_t;
-    std::map<std::string, double> _mapDouble;
-
-    uint32_t conditions = 0x3;
-    int n_processes = 0;
-    double chromo_level = 1;
-    double step = 1;
-    double tolerance = 1e-4;
-    double toleranceBound = 1e-3;
-    double toleranceCoord = 1e-3;      // 2do!
-    double toleranceClosed = 1e-2;     // 2do!
-    int n_loop_control = 200;
-    double loop_abs_cell = 1.5;
-
-    _mapInt.insert({"reduce_passed", conditions});
-    _mapInt.insert({"debug_input", 0});
-    _mapInt.insert({"n_processes", n_processes});
-    _mapInt.insert({"n_loop_control", n_loop_control});
-
-    _mapDouble.insert({ "chromo_level", chromo_level });
-    _mapDouble.insert({ "step", step });
-    _mapDouble.insert({ "tolerance", tolerance });
-    _mapDouble.insert({ "toleranceBound", toleranceBound });
-    _mapDouble.insert({ "toleranceCoord", toleranceCoord });
-    _mapDouble.insert({ "toleranceClosed", toleranceClosed });
-    _mapDouble.insert({ "loop_abs_cell", loop_abs_cell});
+    utilInitialize();
 
     int c = 0;
-    //#pragma pack(push, 1)
     CidlPassParameterMap *m = (CidlPassParameterMap *)argv[c++];
-    //#pragma pack(pop, 1)
-    int nErrors = m->parse(&_mapInt, &_mapuint64_t, &_mapDouble);
-    if (nErrors != 0)
+    if (m->parse(&mapInt, &mapuint64_t, &mapDouble) != 0)
         return LIB_STATE_NO_PARAMETER;
+    _proceedGlobals();
 
-    int cond = _mapInt["reduce_passed"];
-    conditions = cond;
-    n_processes = _mapInt["n_processes"];
-
-    chromo_level = _mapDouble["chromo_level"];
-    step = _mapDouble["step"];
-    tolerance = _mapDouble["tolerance"];
-    toleranceBound = _mapDouble["toleranceBound"];
-    toleranceCoord = _mapDouble["toleranceCoord"];
-    toleranceClosed = _mapDouble["toleranceClosed"];
-    debug_input = _mapInt["debug_input"];
-
-    n_loop_control = _mapInt["n_loop_control"];
-    loop_abs_cell = _mapDouble["loop_abs_cell"];
     
     int *N = (int *)argv[c++];
     double *Bx = (double *)argv[c++];
@@ -299,12 +273,8 @@ int mfoLines(int /* argc */, void* argv[])
     int *codes = (int *)argv[c++];
     double *times = (double *)argv[c++];
 
-    return mfoGetLines(N, Bx, By, Bz,
-        conditions, chromo_level,
+    return mfoGetLinesP(N, Bx, By, Bz,
         seeds, Nseeds,
-        n_processes,
-        step, tolerance, toleranceBound,
-        n_loop_control, loop_abs_cell,
         nLines, nPassed,
         status, physLength, avField,
         linesLength, codes,

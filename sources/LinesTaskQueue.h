@@ -84,6 +84,7 @@ public:
         , closedTol(3e-3)
         , nPassed(0)
         , passed(nullptr)
+        , globalIdx(nullptr)
         , nLines(0)
         , nNonStored(0)
     {

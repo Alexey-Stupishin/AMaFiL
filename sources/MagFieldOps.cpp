@@ -202,6 +202,16 @@ void _proceedGlobals(bool bGet)
     mapDoubleProceed(bGet, "disambig_acc2att", Disambig_acc2att, 0.005);
     mapDoubleProceed(bGet, "disambig_Bmax_term", Disambig_Bmax_term, 200);
     mapDoubleProceed(bGet, "disambig_non_stable_term", Disambig_non_stable_term, 0.005);
+
+    mapIntProceed(bGet, "lines_conditions", lines_conditions, 3);
+    mapDoubleProceed(bGet, "lines_chromo_level", lines_chromo_level, 1);
+    mapDoubleProceed(bGet, "lines_step", lines_step, 1);
+    mapDoubleProceed(bGet, "lines_tolerance", lines_tolerance, 1e-4);
+    mapDoubleProceed(bGet, "lines_abs_bound_achieve", lines_abs_bound_achieve, 1e-3);
+    mapDoubleProceed(bGet, "lines_rel_bound_achieve", lines_rel_bound_achieve, 0);
+    mapDoubleProceed(bGet, "lines_rel_seeds_bound", lines_rel_seeds_bound, 0);
+    mapIntProceed(bGet, "lines_n_loop_control", lines_n_loop_control, 200);
+    mapDoubleProceed(bGet, "lines_loop_abs_cell", lines_loop_abs_cell, 1.5);
 }
 
 //------------------------------------------------------------------

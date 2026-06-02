@@ -35,7 +35,7 @@ private:
     }
 
 public:
-    CNLFFFLinesTaskQueue(CagmVectorFieldOps *_field, double *_seeds, int _Nseeds,
+    CNLFFFLinesTaskQueue(CagmVectorFieldOps *_field, double *_seeds, int _Nseeds, double relSeedsBound = 0,
         uint32_t _cond = 0x3, double _chromoLevel = 0,
         double *_physLength = nullptr, double *_avField = nullptr,
         int *_voxelStatus = nullptr, int *_codes = nullptr, double *_times = nullptr,
@@ -49,24 +49,44 @@ public:
             _startIdx, _endIdx, _apexIdx, maxResult,
             _maxCoordLength, _linesLength, _coords, _linesStart, _linesIndex, seedIdx)
       , seeds(_seeds)
+      , params(nullptr)
     {
-        Nseeds = _Nseeds;
-        globalIdx = nullptr;
-
-        autoParams = (Nseeds <= 0 || !seeds);
         field->dimensions(NF);
-        //memcpy(NF, field->GetDimensions(), 3*sizeof(int));
-        int nVox = (autoParams ? NF[0]*NF[1]*NF[2] : Nseeds);
+        autoParams = (_Nseeds <= 0 || !seeds);
 
-        InitQueue(nVox);
+        int from[3], to[3];
+        if (!autoParams)
+        {
+            Nseeds = _Nseeds;
+        }
+        else
+        {
+            from[0] = 0;
+            from[1] = 0;
+            from[2] = 0;
+            to[0] = NF[0]-1;
+            to[1] = NF[1]-1;
+            to[2] = NF[2]-1;
+            if (relSeedsBound > 0)
+            {
+                from[0] = (int)ceil(relSeedsBound*NF[0]);
+                to[0] = NF[0] - 1 - from[0];
+                from[1] = (int)ceil(relSeedsBound*NF[1]);
+                to[1] = NF[1] - 1 - from[1];
+                to[2] = NF[2] - 1 - (int)(ceil(relSeedsBound*NF[2]));
+                Nseeds = _Nseeds;
+            }
+            Nseeds = (to[0]-from[0]+1)*(to[1]-from[1]+1)*(to[1]-from[1]+1);
+            if (cond != Conditions::NoCond)
+                passed = new int[NF[0]*NF[1]*NF[2]];
+        }
 
-        if (cond != Conditions::NoCond)
-            passed = new int[nVox];
+        InitQueue(Nseeds);
 
         if (!autoParams)
         {
-            globalIdx = new int[nVox];
-            params = new double[3 * sizeof(double) * nVox];
+            globalIdx = new int[Nseeds];
+            params = new double[3 * Nseeds];
             for (int id = 0; id < Nseeds; id++)
             {
                 InitOutput(id);
@@ -78,11 +98,11 @@ public:
         }
         else
         {
-            params = new double[3 * sizeof(double)];
+            params = new double[3];
 
-            for (int kz = 0; kz < NF[2]; kz++)
-                for (int ky = 0; ky < NF[1]; ky++)
-                    for (int kx = 0; kx < NF[0]; kx++)
+            for (int kz = from[2]; kz <= to[2]; kz++)
+                for (int ky = from[1]; ky <= to[1]; ky++)
+                    for (int kx = from[0]; kx <= to[0]; kx++)
                         InitOutput(getGlobalID(kx, ky, kz));
         }
     }

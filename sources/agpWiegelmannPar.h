@@ -174,7 +174,7 @@ public:
 
     double step(int _iterN);
 
-    static uint64_t estimateMemory(int *N, int nThreads, bool full = false)
+    static uint64_t estimateMemory(int *N, int nThreads, bool full = true)
     {
         int np = TaskQueueProcessor::getProcInfo(nThreads);
         uint64_t P = (N[0]+1) * (N[1]+1);
