@@ -13,7 +13,7 @@ The repository contains:
 
 Wrappers for the library are implemented in:
 * IDL ([idlAMaFiL](https://github.com/Alexey-Stupishin/idlAMaFiL)). idlAMaFiL used as subpackage of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
-* Python ([pyAMPP](https://github.com/suncast-org/pyAMPP)). Porting to the pyAMPP in progress.
+* Python ([pyAMaFiL](https://github.com/Alexey-Stupishin/pyAMaFiL)). Porting to the ([pyAMPP](https://github.com/suncast-org/pyAMPP)) in progress.
 
 This repository contains submodule [CPP-Common](https://github.com/Alexey-Stupishin/CPP-Common).
 
