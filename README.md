@@ -10,9 +10,14 @@ The repository contains:
 * projects for build under Windows and Linux
 
 ## Dependencies
-IDL wrappers are designed to be used as subpackage of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
 
-This repository contains submodule [common](https://github.com/Alexey-Stupishin/CPP-Common). Working with submodules can be found [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+Wrappers for the library are implemented in:
+* IDL ([idlAMaFiL](https://github.com/Alexey-Stupishin/idlAMaFiL)). idlAMaFiL used as subpackage of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
+* Python ([pyAMPP](https://github.com/suncast-org/pyAMPP)). Porting to the pyAMPP in progress.
+
+This repository contains submodule [CPP-Common](https://github.com/Alexey-Stupishin/CPP-Common).
+
+Working with submodules can be found [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Routines
 * _/binaries/WWNLFFFReconstruction.dll_ - Calculation library for Windows
