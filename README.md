@@ -1,6 +1,6 @@
 # Magnetic-Field library
 
-See [Licence](https://github.com/Alexey-Stupishin/Magnetic-Field_Library/blob/master/LICENCE.md)
+See [Licence](https://github.com/Alexey-Stupishin/AMaFiL/blob/master/LICENCE.md)
 
 [doi:10.5281/zenodo.3896222](https://zenodo.org/record/3896222)
 
@@ -12,7 +12,7 @@ The repository contains:
 ## Dependencies
 IDL wrappers are designed to be used as subpackage of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
 
-This repository contains submodule [common](https://github.com/Alexey-Stupishin/Common). Working with submodules can be found [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+This repository contains submodule [common](https://github.com/Alexey-Stupishin/CPP-Common). Working with submodules can be found [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Routines
 * _/binaries/WWNLFFFReconstruction.dll_ - Calculation library for Windows
@@ -20,7 +20,7 @@ This repository contains submodule [common](https://github.com/Alexey-Stupishin/
 * _/Windows_ - MSVC project for Windows (Visual Studio 2015)
 * _/Linux_ - makefile (g++) for Linux
 
-see [Changelog](https://github.com/Alexey-Stupishin/Magnetic-Field_Library/blob/master/LICENCE.md) for history update
+see [Changelog](https://github.com/Alexey-Stupishin/AMaFiL/blob/master/LICENCE.md) for history update
 
 For NLFFF Weghted method please refer to:
 Wiegelmann, T. Optimization code with weighting function for the reconstruction of coronal magnetic fields. _Solar Phys_., 2004, __219__, 87108. ([doi:10.1023/B:SOLA.0000021799.39465.36](https://link.springer.com/article/10.1023/B:SOLA.0000021799.39465.36), [ADS:2004SoPh..219...87W](https://ui.adsabs.harvard.edu/abs/2004SoPh..219...87W/abstract), [arXiv:0802.0124](https://arxiv.org/abs/0802.0124))
