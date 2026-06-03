@@ -12,7 +12,7 @@ The repository contains:
 ## Dependencies
 
 Wrappers for the library are implemented in:
-* IDL ([idlAMaFiL](https://github.com/Alexey-Stupishin/idlAMaFiL)). idlAMaFiL used as subpackage of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
+* IDL ([idlAMaFiL](https://github.com/Alexey-Stupishin/idlAMaFiL)). idlAMaFiL used as submodule of [GX-simulator](https://github.com/Gelu-Nita/GX_SIMULATOR) package, which included in [Solar Soft](http://www.lmsal.com/solarsoft/sswdoc/sswdoc_jtop.html) environment.
 * Python ([pyAMaFiL](https://github.com/Alexey-Stupishin/pyAMaFiL)). Porting to the ([pyAMPP](https://github.com/suncast-org/pyAMPP)) in progress.
 
 This repository contains submodule [CPP-Common](https://github.com/Alexey-Stupishin/CPP-Common).
@@ -27,7 +27,8 @@ Working with submodules can be found [here](https://git-scm.com/book/en/v2/Git-T
 
 see [Changelog](https://github.com/Alexey-Stupishin/AMaFiL/blob/master/CHANGELOG.md) for history update
 
-For NLFFF Weghted method please refer to:
+## References
+For NLFFF weighted method please refer to:
 Wiegelmann, T. Optimization code with weighting function for the reconstruction of coronal magnetic fields. _Solar Phys_., 2004, __219__, 87108. ([doi:10.1023/B:SOLA.0000021799.39465.36](https://link.springer.com/article/10.1023/B:SOLA.0000021799.39465.36), [ADS:2004SoPh..219...87W](https://ui.adsabs.harvard.edu/abs/2004SoPh..219...87W/abstract), [arXiv:0802.0124](https://arxiv.org/abs/0802.0124))
 
 Some proves and using of this library can be found in:
