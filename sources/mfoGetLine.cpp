@@ -1,4 +1,5 @@
 #include "stdDefinitions.h"
+
 #include "mfoGlobals.h"
 
 #include "MagFieldOps.h"
@@ -9,6 +10,80 @@
 
 #include "console_debug.h"
 #include "DebugWrite.h"
+
+static int reindex(int *N, int index)
+{
+    int kx = index % N[0];
+    int kyz = index / N[0];
+    int ky = kyz % N[1];
+    int kz = kyz / N[1];
+    return (kz*N[0] + kx)*N[1] + ky;
+}
+
+static void convert_int(int *N, int *data)
+{   
+    int V = N[0] * N[1] * N[2];
+    int *reform = new int[V];
+
+    for (int k = 0; k < V; k++)
+        reform[reindex(N, k)] = data[k];
+
+    memcpy(data, reform, V*sizeof(int));
+
+    delete[] reform;
+}
+
+static void convert_double(int *N, double *data)
+{
+    int V = N[0] * N[1] * N[2];
+    double *reform = new double[V];
+
+    for (int k = 0; k < V; k++)
+        reform[reindex(N, k)] = data[k];
+
+    memcpy(data, reform, V*sizeof(double));
+
+    delete[] reform;
+}
+
+static void convert_back(int *N, int *data)
+{
+    int V = N[0] * N[1] * N[2];
+    int *reform_index = new int[V];
+    
+    for (int k = 0; k < V; k++)
+        reform_index[k] = reindex(N, data[k]);
+    convert_int(N, reform_index);
+    memcpy(data, reform_index, V*sizeof(int));
+
+    delete[] reform_index;
+}
+
+static void internal_convert_indices(int *N,
+    int *status, double *physLength, double *avField,
+    int *startIdx, int *endIdx, int *apexIdx, int *seedIdx,
+    int *codes, double *times)
+{
+    if (status)
+        convert_int(N, status);
+    if (physLength)
+        convert_double(N, physLength);
+    if (avField)
+        convert_double(N, avField);
+    if (codes)
+        convert_int(N, codes);
+    if (times)
+        convert_double(N, times);
+
+    if (startIdx)
+        convert_back(N, startIdx);
+    if (endIdx)
+        convert_back(N, endIdx);
+    if (apexIdx)
+        convert_back(N, apexIdx);
+    if (seedIdx)
+        convert_back(N, seedIdx);
+}
 
 __declspec(dllexport) uint32_t mfoGetLinesV(CagmVectorField *v,
     uint32_t _cond, double chromoLevel,
@@ -147,6 +222,12 @@ __declspec(dllexport) uint32_t mfoGetLinesP(int *N,
         maxCoordLength, totalLength, coord, linesStart, linesIndex, seedIdx, times);
 
     delete v;
+
+    if (!seeds && lines_internal_convert_indices)
+        internal_convert_indices(N, 
+                                 status, physLength, avField,
+                                 startIdx, endIdx, apexIdx, seedIdx,
+                                 seedIdx, times);
 
     console_debug("vector box deleted")
 

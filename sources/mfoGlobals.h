@@ -124,5 +124,6 @@ d_mfoglobaldefineextern double lines_rel_bound_achieve;
 d_mfoglobaldefineextern double lines_rel_seeds_bound;
 d_mfoglobaldefineextern int lines_n_loop_control;
 d_mfoglobaldefineextern double lines_loop_abs_cell;
+d_mfoglobaldefineextern int lines_internal_convert_indices;
 
 #undef d_mfoglobaldefineextern
